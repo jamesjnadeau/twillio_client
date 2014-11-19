@@ -1,0 +1,17 @@
+html
+{
+	font-size: 85%;
+}
+
+.container
+{
+	margin-left: 1em;
+	margin-right: 3em;
+	width: 99%;
+}
+
+h2
+{
+	text-align: left;
+}
+

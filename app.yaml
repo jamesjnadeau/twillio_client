@@ -1,0 +1,53 @@
+application: explorevermontfood
+version: 1
+runtime: php
+api_version: 1
+threadsafe: true
+
+
+handlers:
+- url: /css
+  static_dir: css
+  application_readable: true
+
+- url: /js
+  static_dir: js
+  application_readable: true
+
+- url: /images
+  static_dir: js
+  application_readable: true
+
+- url: /all_options.php
+  script: all_options.php
+
+- url: /location_view.php
+  script: location_view.php
+
+- url: /options.php
+  script: options.php
+
+- url: /towns.php
+  script: .php
+
+- url: /sources.php
+  script: .php
+
+- url: /.php
+  script: .php
+
+- url: /.php
+  script: .php
+
+- url: /.php
+  script: .php
+
+- url: /.php
+  script: .php
+
+- url: /.php
+  script: .php
+
+
+- url: /.*
+  script: index.php

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 32
+/!svn/ver/7205/trunk/service/css
+END
+print.css
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/!svn/ver/3159/trunk/service/css/print.css
+END
+ie.css
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/!svn/ver/4/trunk/service/css/ie.css
+END
+screen.css
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/!svn/ver/2160/trunk/service/css/screen.css
+END
+site.css
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/!svn/ver/7205/trunk/service/css/site.css
+END
