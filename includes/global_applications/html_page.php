@@ -432,7 +432,7 @@ function app_html_page_footer_mobile($show_support = true)
 	/*
 	 * Debug
 	 */
-	if(is_mypoint_employee())
+	if(false)
 	{
 		/*if (isset($GLOBALS['xhprof']) && extension_loaded('xhprof')) 
 		{
