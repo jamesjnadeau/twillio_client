@@ -1,0 +1,44 @@
+html,body {
+	font-family: Helvetica;
+	height: 100%;
+	margin: 0;
+	background-color: #E5E5E5;
+}
+core-header-panel {
+	height: 100%;
+	overflow: auto;
+	-webkit-overflow-scrolling: touch;
+	background-color: #E5E5E5;
+}
+core-toolbar {
+	background: #6699CC;
+	color: white;
+}
+.card {
+	display: block;
+	background: white;
+	box-sizing: border-box;
+	margin: 16px;
+	padding: 16px;
+	border-radius: 2px;
+}
+
+.primary {
+	color: #6699CC;
+}
+
+.secondary {
+	color: #FF9933;
+}
+
+.accent {
+	color: #CCCC33;
+}
+
+.core-selected {
+	background-color: #6699CC;
+}
+
+paper-item div {
+	margin-left: 10px;
+}
