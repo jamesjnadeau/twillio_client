@@ -16,6 +16,7 @@
     "core-menu": "Polymer/core-menu#~0.5.1",
     "paper-icon-button": "Polymer/paper-icon-button#~0.5.1",
     "paper-item": "Polymer/paper-item#~0.5.1",
-    "paper-shadow": "Polymer/paper-shadow#~0.5.1"
+    "paper-shadow": "Polymer/paper-shadow#~0.5.1",
+    "paper-input": "Polymer/paper-input#~0.5.1"
   }
 }
