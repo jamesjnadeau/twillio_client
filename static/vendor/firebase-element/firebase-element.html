@@ -257,8 +257,8 @@ Example:
     },
     valueLoaded: function(snapshot) {
       this.valueLoading = false;
-      if (this.ref.name() !== snapshot.name()) {
-        this.log && console.warn('squelching stale response [%s]', snapshot.name());
+      if (this.ref.key() !== snapshot.key()) {
+        this.log && console.warn('squelching stale response [%s]', snapshot.key());
         return;
       }
       this.log && console.log('acquired value ' + this.location);
@@ -353,9 +353,9 @@ Example:
       this.childEvent('child-removed', snapshot);
     },
     childEvent: function(kind, snapshot) {
-      this.log && console.log(kind, snapshot.name());
+      this.log && console.log(kind, snapshot.key());
       if (this.childEvents) {
-        this.fire(kind, {name: snapshot.name(), value: snapshot.val()});
+        this.fire(kind, {name: snapshot.key(), value: snapshot.val()});
       }
     },
     modulateData: function(operation, snapshot) {
@@ -371,10 +371,10 @@ Example:
       if (!this.data) {
         this.data = {};
       }
-      this.data[snapshot.name()] = snapshot.val();
+      this.data[snapshot.key()] = snapshot.val();
     },
     removeData: function(snapshot) {
-      var key = snapshot.name();
+      var key = snapshot.key();
       if (this.data instanceof Array) {
         this.data.splice(key, 1);
         if (data.length == 0) {

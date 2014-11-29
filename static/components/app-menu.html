@@ -1,0 +1,40 @@
+
+<link rel="import" href="/vendor/core-menu/core-menu.html">
+<link rel="import" href="/vendor/core-icon/core-icon.html">
+<link rel="import" href="/vendor/paper-item/paper-item.html">
+
+<link rel="import" href="/components/app-globals.html">
+
+<polymer-element name="app-menu" >
+	<template>
+		<app-globals id="globals"></app-globals>
+		
+		<core-menu selected="0" on-core-select="{{selectAction}}">>
+			<paper-item>{{display_name}}</paper-item>
+			<paper-item ><core-icon icon="settings" ></core-icon><div>Settings</div></paper-item>
+			<paper-item ><core-icon icon="settings-phone" ></core-icon><div>Numbers</div></paper-item>
+			<paper-item ><core-icon icon="explore" ></core-icon><div>Routing</div></paper-item>
+			<paper-item on-tap="{{logout}}" hidden?="{logged_in}}" >
+				<core-icon icon="close" ></core-icon><div>Logout</div>
+			</paper-item>
+		</core-menu>
+	</template>
+	<script>
+		Polymer({
+			ready: function() {
+				this.logged_in = false;
+				this.logout = function() {
+					this.$.globals.auth.logout();
+					window.location = '/';
+				}
+			},
+			domReady: function() {
+				console.log('domReady', this.$.globals.user)
+				if(this.$.globals.user) {
+					this.logged_in = true;
+					this.display_name = this.$.globals.user.google.displayName;
+				}
+			},
+		});
+	</script>
+</polymer-element>

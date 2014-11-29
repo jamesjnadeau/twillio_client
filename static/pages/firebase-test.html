@@ -1,0 +1,77 @@
+<link rel="import" href="/vendor/firebase-element/firebase-element.html">
+<polymer-element name="firebase-test" >
+	<template>
+		<firebase-element id="base" on-data-change="{{dataChange}}" data="{{data}}" location="https://twilio-manager.firebaseio.com/demo" log></firebase-element>
+
+		<h3>Top-level properties persist automatically:</h3>
+
+		<input value="{{data.name}}">
+		<br>
+		<input value="{{data.info}}">
+
+		<hr>
+
+		<h3>Nested properties must be persisted manually:</h3>
+
+		<input value="{{data.more.color}}">
+
+		<button on-tap="{{commitMore}}">Commit data.more</button>
+
+		<hr>
+
+		<h3>Remote Data</h3>
+		<pre>{{json}}</pre>
+
+		<hr>
+
+		<button on-tap="{{resetLocal}}">Reset Local</button>
+		<button on-tap="{{removeLocal}}">Remove Local</button>
+		<button on-tap="{{resetRemote}}">Reset remote</button>
+		<button on-tap="{{removeRemote}}">Remove Remote</button>
+	</template>
+ 	<script>
+		Polymer({
+			ready: function() {
+				this.resetLocal = function() {
+					// direct setting of data is persisted automatically
+					this.data = {
+						name: 'anonymous',
+						info: 'none',
+						more: {
+							color: "yellow"
+						}
+					};
+				};
+
+				this.removeLocal = function() {
+					this.data = null;
+				};
+
+				this.resetRemote = function() {
+					// Simulate other actor setting data to same remote location
+					new Firebase('https://treedata-demo.firebaseio.com/demo').set({
+						name: 'anonymous',
+						info: 'none',
+						more: {
+							color: "yellow"
+						}
+					});
+				};
+
+				this.removeRemote = function() {
+					// Simulate other actor removing data from same remote location
+					new Firebase('https://treedata-demo.firebaseio.com/demo').remove();
+				};
+
+				this.commitMore = function() {
+					this.$.base.commitProperty('more');
+				};
+
+				this.dataChange = function() {
+					this.json = JSON.stringify(this.data, null, '\t');
+				};
+		  }
+		});
+	</script>
+</polymer-element>
+  
