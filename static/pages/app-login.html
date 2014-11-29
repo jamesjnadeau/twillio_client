@@ -1,0 +1,84 @@
+<link rel="import" href="/vendor/paper-shadow/paper-shadow.html">
+<link rel="import" href="/components/app-globals.html">
+
+<polymer-element name="app-login" attributes="auth">
+	<template>
+		<link rel='stylesheet' href='/css/default.css'/>
+		<app-globals id="globals" firebase_url="{{firebase_url}}" ></app-globals>
+		<firebase-login 
+				id="login"
+				location="{{firebase_url}}"
+				user="{{user}}"
+				redirect
+				></firebase-login>
+		<paper-shadow z="1" class="card" >
+			Firebase location:
+			<input value="{{firebase_url}}" disabled>
+			<input value="{{testing}}" disabled>
+			<br>
+
+			Provider type: 
+			<select value="{{auth.provider}}">
+				<option selected >google</option>
+				<!--<option>anonymous</option>
+					<option>facebook</option> -->
+				<option>github</option>
+				<!--<option>twitter</option>
+					<option>password</option> -->
+			</select>
+			<em>Only 'anonymous', 'google', and 'password' are activated for demo Firebase account</em>
+			<br>
+
+			Login params (JSON):
+			<input value="{{params}}" id="params">
+			<em>Required by some provider types</em>
+			<br>
+
+			<br>
+			<div id="message"></div>
+			<br>
+
+			<button on-tap="{{login}}" hidden?="{{!auth.statusKnown || auth.user}}">Login</button>
+			<button on-tap="{{logout}}" hidden?="{{!auth.statusKnown || !auth.user}}">Logout</button>
+
+			<h3>Login status:</h3>
+			<p>{{auth.statusKnown && user && 'Logged in' || auth.statusKnown && 'Logged out' || 'Unknown (checking status...)'}}</p>
+
+			<h3>User ID:</h3>
+			<pre>{{user.uid}}</pre>
+		</paper-shadow>
+	</template>
+ 	<script>
+		Polymer({
+			ready: function() {
+				
+				this.auth = this.$.login;
+				this.auth.provider = 'google';
+				
+				this.login = function() {
+					var params;
+					try {
+						params = JSON.parse(document.querySelector("#params").value);
+					} catch (e) {
+						params = null;
+					}
+					if (this.provider == 'password') {
+						params = this.params || {};
+						params.email = this.email;
+						params.password = this.password;
+					}
+
+					this.auth.login(params);
+				};
+
+				this.logout = function() {
+					this.auth.logout();
+				};
+				this.error = function(e) {
+					setMessage('Error: ' + e.detail.message, true);
+				};
+			}
+		});
+	</script>
+</polymer-element>
+  

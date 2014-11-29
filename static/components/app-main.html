@@ -1,0 +1,141 @@
+
+<link rel="import" href="/vendor/core-header-panel/core-header-panel.html">
+<link rel="import" href="/vendor/core-toolbar/core-toolbar.html">
+<link rel="import" href="/vendor/core-drawer-panel/core-drawer-panel.html">
+<link rel="import" href="/vendor/core-menu/core-menu.html">
+<link rel="import" href="/vendor/paper-input/paper-input.html">
+<link rel="import" href="/vendor/paper-item/paper-item.html">
+<link rel="import" href="/vendor/paper-shadow/paper-shadow.html" >
+<link rel="import" href="/vendor/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/vendor/core-icons/communication-icons.html">
+
+<link rel="import" href="/vendor/app-router/app-router.html">
+
+<link rel="import" href="/pages/app-login.html" >
+
+<link rel="import" href="/components/app-globals.html" >
+<link rel="import" href="/components/app-menu.html" >
+
+
+<polymer-element name="app-main" attributes="">
+	<template>
+		<link rel='stylesheet' href='/css/default.css'/>
+		<app-globals id="globals" firebase_url="{{firebase_url}}" ></app-globals>
+		<firebase-login 
+				id="login"
+				location="{{location}}"
+				user="{{user}}"
+				statusKnown="{{statusKnown}}"
+				redirect
+				></firebase-login>
+
+		<core-drawer-panel force-narrow="true" >
+			<core-header-panel drawer>
+				<core-toolbar>
+					<paper-input label="Search" ></paper-input>
+					<paper-icon-button icon="search"></paper-icon-button>
+				</core-toolbar>
+				<div>
+					<app-menu display_name="{{display_name}}" auth={{auth}} ></app-menu>
+				</div>
+			</core-header-panel>
+			<core-header-panel main>
+				<core-toolbar>
+					<paper-icon-button icon="menu" core-drawer-toggle ></paper-icon-button>
+					<span flex>Twillio Client</span>
+					<paper-icon-button icon="communication:phone"></paper-icon-button>
+				</core-toolbar>
+				<div class="container" layout vertical>
+					<app-router id="router" init="manual" on-state-change="{{stateChange}}" mode="pushstate" >
+						<!-- matches an exact path 
+						<app-route path="/home" import="/pages/home.html"></app-route>-->
+
+						<!-- matches using a wildcard 
+						<app-route path="/customer/*" import="/pages/customer-page.html"></app-route>-->
+
+						<!-- matches using a path variable 
+						<app-route path="/order/:id" import="/pages/order-page.html"></app-route>-->
+
+						<!-- matches a pattern like '/word/number' 
+						<app-route path="/^\/\w+\/\d+$/i" regex import="/pages/regex-page.html"></app-route>-->
+
+							<!--
+							<app-login auth="{{auth}}" hidden?="{{!auth.statusKnown || auth.user}}" ></app-loging>
+
+
+						<app-route path="/login">
+							<template>
+								<app-login auth="{{auth}}" hidden?="{{!auth.statusKnown || auth.user}}" ></app-login>
+							</template>
+						</app-route>-->
+						<app-route path="/login" import="/pages/app-login.html" element="app-login" ></app-route>
+
+						<!-- matches everything else -->
+						<app-route path="*" import="/pages/firebase-test.html" element="firebase-test" on-activate-route-start="{{homePage}}" ></app-route>
+					</app-router>
+				</div>
+			</core-header-panel>
+		</core-drawer-panel>
+	</template>
+	<script>
+		(function() {
+			var display_name = 'Unknown';
+			var wait_for_status_semaphore = true;
+			var loginEvent_semaphore = true;
+			Polymer({
+				ready: function() {
+					this.display_name = display_name;
+					this.location = this.firebase_url;
+					this.auth = this.$.login;
+					
+					this.$.router.init();
+					
+				},
+				domReady: function() {
+					var self = this;
+					var loginEvent = function(event) {
+						if(loginEvent_semaphore) {
+							loginEvent_semaphore = false;
+							var user = event.detail.user;
+							console.log('loginEvent', user);
+							if(typeof user !== 'undefiend' && typeof user.google !== 'undefiend') {
+								this.display_name = user.google.displayName;
+							}
+							self.$.router.go('/', {replace: true});
+							//window.locaiton='/';
+						}
+					}
+					//document.removeEventListener('login', loginEvent);
+					document.addEventListener('login', loginEvent);
+					
+				},
+				stateChange: function(event) {
+					console.log('stateChange', this.auth.statusKnown, event.detail.path);
+					var self = this;
+					if(wait_for_status_semaphore) {
+						wait_for_status_semaphore = false;
+						var wait_for_status = function() {
+							console.log('wait_for_status', self.statusKnown);
+							if(self.statusKnown) {
+								//redirect to the login page if not signed in
+								if (!self.auth.user && event.detail.path !== '/login') {
+									event.preventDefault();
+									//router_semaphore = false;
+									self.$.router.go('/login', {replace: true});
+									//router_semaphore = true;
+								}
+							} else {
+								window.setTimeout(wait_for_status, 200);
+							}
+						}
+						wait_for_status();
+					}
+				},
+				homePage: function(event) {
+					// this is only called when you navigate to the home page
+					console.log(event.detail.path);
+				}
+			});
+		})();
+	</script>
+</polymer-element>

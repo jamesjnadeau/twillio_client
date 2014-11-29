@@ -1,37 +1,47 @@
 <link rel="import" href="/vendor/firebase-element/firebase-element.html">
-<polymer-element name="firebase-test" >
+<link rel="import" href="/vendor/paper-shadow/paper-shadow.html">
+<link rel="import" href="/components/app-globals.html">
+
+<polymer-element name="firebase-test" attributes >
 	<template>
-		<firebase-element id="base" on-data-change="{{dataChange}}" data="{{data}}" location="https://twilio-manager.firebaseio.com/demo" log></firebase-element>
+		<link rel='stylesheet' href='/css/default.css'/>
+		<app-globals firebase_url="{{firebase_url}}"></app-globals>
 
-		<h3>Top-level properties persist automatically:</h3>
+		<paper-shadow  z="1" class="card">
+			<firebase-element id="base" on-data-change="{{dataChange}}" data="{{data}}" location="{{firebase_data_url}}" log></firebase-element>
 
-		<input value="{{data.name}}">
-		<br>
-		<input value="{{data.info}}">
+			<h3>Top-level properties persist automatically:</h3>
 
-		<hr>
+			<input value="{{data.name}}">
+			<br>
+			<input value="{{data.info}}">
 
-		<h3>Nested properties must be persisted manually:</h3>
+			<hr>
 
-		<input value="{{data.more.color}}">
+			<h3>Nested properties must be persisted manually:</h3>
 
-		<button on-tap="{{commitMore}}">Commit data.more</button>
+			<input value="{{data.more.color}}">
 
-		<hr>
+			<button on-tap="{{commitMore}}">Commit data.more</button>
 
-		<h3>Remote Data</h3>
-		<pre>{{json}}</pre>
+			<hr>
 
-		<hr>
+			<h3>Remote Data</h3>
+			<pre>{{json}}</pre>
 
-		<button on-tap="{{resetLocal}}">Reset Local</button>
-		<button on-tap="{{removeLocal}}">Remove Local</button>
-		<button on-tap="{{resetRemote}}">Reset remote</button>
-		<button on-tap="{{removeRemote}}">Remove Remote</button>
+			<hr>
+
+			<button on-tap="{{resetLocal}}">Reset Local</button>
+			<button on-tap="{{removeLocal}}">Remove Local</button>
+			<button on-tap="{{resetRemote}}">Reset remote</button>
+			<button on-tap="{{removeRemote}}">Remove Remote</button>
+		</paper-shadow>
 	</template>
  	<script>
 		Polymer({
 			ready: function() {
+				this.firebase_data_url = this.firebase_url+'/demo';
+
 				this.resetLocal = function() {
 					// direct setting of data is persisted automatically
 					this.data = {
@@ -49,7 +59,7 @@
 
 				this.resetRemote = function() {
 					// Simulate other actor setting data to same remote location
-					new Firebase('https://treedata-demo.firebaseio.com/demo').set({
+					new Firebase(this.firebase_data_url).set({
 						name: 'anonymous',
 						info: 'none',
 						more: {
@@ -60,7 +70,7 @@
 
 				this.removeRemote = function() {
 					// Simulate other actor removing data from same remote location
-					new Firebase('https://treedata-demo.firebaseio.com/demo').remove();
+					new Firebase(this.firebase_data_url).remove();
 				};
 
 				this.commitMore = function() {

@@ -3,168 +3,28 @@
 
 <link rel="import" href="/vendor/paper-dialog/paper-dialog.html">
 
-<polymer-element name="app-globals" attributes="user auth" >
+<polymer-element name="app-globals" attributes="auth firebase_url" >
 	<template>
-		<firebase-login 
-			id="login" 
-			user="{{user}}" 
-			statusKnown="{{statusKnown}}" 
-			location="https://twilio-manager.firebaseio.com" 
-			provider="{{provider}}"
-			redirect
-			on-error="{{error}}" 
-			on-user-created="{{userSuccess}}" 
-			on-password-changed="{{userSuccess}}" 
-			on-password-reset="{{userSuccess}}" 
-			on-user-removed="{{userSuccess}}"
-			></firebase-login>
-		<paper-dialog id="loginDialog" heading="Dialog Title">
-  			<div>
-				Firebase location:
-				<input value="https://twilio-manager.firebaseio.com" disabled>
-				<br>
-
-				Provider type: 
-				<select value="{{provider}}">
-					<option>google</option>
-					<!--<option>anonymous</option>
-						<option>facebook</option> --> 
-					<option>github</option>
-					<!--<<option>twitter</option>
-					<option>password</option> -->
-				</select>
-				<em>Only 'anonymous', 'google', and 'password' are activated for demo Firebase account</em>
-				<br>
-
-				Login params (JSON):
-				<input value="{{params}}" id="params">
-				<em>Required by some provider types</em>
-				<br>
-
-				<div hidden?="{{provider!='password'}}">
-					<br><em>Password-specific options:</em><br>
-					<input placeholder="email" value="{{email}}">
-					<input placeholder="password" value="{{password}}">
-					<button on-tap="{{createUser}}" disabled?="{{!email || !password}}">Create user</button>
-					<br>
-					<input placeholder="new password" value="{{newPassword}}">
-					<button on-tap="{{changePassword}}" disabled?="{{!email || !password || !newPassword}}">Change password</button>
-					<br>
-					<button on-tap="{{resetPassword}}" disabled?="{{!email || !password}}">Reset password</button>
-					<button on-tap="{{removeUser}}" disabled?="{{!email || !password}}">Remove user</button>
-				</div>
-				<br>
-				<div id="message"></div>
-				<br>
-
-				<button on-tap="{{login}}" hidden?="{{!statusKnown || user}}">Login</button>
-				<button on-tap="{{logout}}" hidden?="{{!statusKnown || !user}}">Logout</button>
-
-				<h3>Login status:</h3>
-				<p>{{statusKnown && user && 'Logged in' || statusKnown && 'Logged out' || 'Unknown (checking status...)'}}</p>
-
-				<h3>User ID:</h3>
-				<pre>{{user.uid}}</pre>
-			</div>
-		</paper-dialog>
 	</template>
 	<script>
 		(function() {
 			// these variables are shared by all instances of app-globals
-			var firstName = 'John';
-			var lastName = 'Smith';
+			var firebase_url = 'https://twilio-manager.firebaseio.com';
+			
 			
 			Polymer({
 				ready: function() {
 					// copy global values into instance properties
-					this.firstName = firstName;
-					this.lastName = lastName;
+					this.firebase_url = firebase_url;
 
 					//Firebase Login
-					this.auth = this.$.login;
-					
-					var self = this;
-					/*Object.observe(this.auth, function(changes){
-						// This asynchronous callback runs
-						changes.forEach(function(change) {
-							// Letting us know what changed
-							//console.log('observe', change.type, change.name, change.object[change.name]);
-							switch(change.type) {
-								case 'add':
-								case 'update':
-									switch(change.name) {
-										case 'user':
-											self.user = change.object[change.name];
-											user_loaded();
-											break;
-									}
-									break;
-							}
-						});
-					});*/
-					
-					console.log('user', this.user);
-
-					function user_loaded() {
-						
-					}
-
-					this.login = function() {
-						console.log('login');
-						var params;
-						try {
-							params = JSON.parse(document.querySelector("#params").value);
-						} catch (e) {
-							params = null;
-						}
-						if (this.provider == 'password') {
-							params = this.params || {};
-							params.email = this.email;
-							params.password = this.password;
-						}
-						this.auth.login(params);
-					};
-
-					this.logout = function() {
-						this.auth.logout();
-					};
-					this.createUser = function() {
-						this.auth.createUser(this.email, this.password);
-					};
-					this.removeUser = function() {
-						this.auth.removeUser(this.email, this.password);
-					};
-					this.changePassword = function() {
-						this.auth.changePassword(this.email, this.password, this.newPassword);
-					};
-					this.resetPassword = function() {
-						this.auth.sendPasswordResetEmail(this.email);
-					};
-					this.error = function(e) {
-						setMessage('Error: ' + e.detail.message, true);
-					};
-
-					this.userSuccess = function(e) {
-						//setMessage(e.type + ' success!', false);
-						console.log('userSuccess');
-						//redirect_home();
-					};
-
-					function redirect_home() {
-						window.location = '/index.html';
-					}
+					this.auth = document.querySelector('firebase-login');
+					//this.authStatus = this.auth.statusKnown || false;
 				},
 				domReady: function() {
-					this.user = this.auth.user;
-					console.log('here', this.auth.statusKnown, this.user);
-					var dialog = this.$.loginDialog;
-					if(this.auth.statusKnown && !this.auth.user) { //already logged in
-						if (!dialog) {
-							return;
-						}
-						dialog.toggle();
-					}
-				}
+					
+				},
+				
 			});
 		})();
 	</script>

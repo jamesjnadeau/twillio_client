@@ -5,10 +5,8 @@
 
 <link rel="import" href="/components/app-globals.html">
 
-<polymer-element name="app-menu" >
+<polymer-element name="app-menu" attributes="display_name auth">
 	<template>
-		<app-globals id="globals"></app-globals>
-		
 		<core-menu selected="0" on-core-select="{{selectAction}}">>
 			<paper-item>{{display_name}}</paper-item>
 			<paper-item ><core-icon icon="settings" ></core-icon><div>Settings</div></paper-item>
@@ -24,17 +22,13 @@
 			ready: function() {
 				this.logged_in = false;
 				this.logout = function() {
-					this.$.globals.auth.logout();
+					this.auth.logout();
 					window.location = '/';
 				}
 			},
 			domReady: function() {
-				console.log('domReady', this.$.globals.user)
-				if(this.$.globals.user) {
-					this.logged_in = true;
-					this.display_name = this.$.globals.user.google.displayName;
-				}
-			},
+				
+			}
 		});
 	</script>
 </polymer-element>
