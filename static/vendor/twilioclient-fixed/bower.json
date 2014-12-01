@@ -1,0 +1,5 @@
+{
+  "name":"twilioclient",
+  "version":"1.2.0",
+  "main":"twilio.min.js"
+}

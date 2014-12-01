@@ -1,0 +1,15 @@
+{
+  "name": "twilioclient",
+  "version": "1.2.4",
+  "main": "twilio.min.js",
+  "homepage": "https://github.com/domderen/twilioclient",
+  "_release": "1.2.4",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.2.4",
+    "commit": "0ee456c0f0e7a48a491a9b8934e97969e411eabe"
+  },
+  "_source": "git://github.com/domderen/twilioclient.git",
+  "_target": "*",
+  "_originalSource": "twilioclient-fixed"
+}

@@ -1,0 +1,52 @@
+{
+  "name": "twilio-client",
+  "version": "0.0.0",
+  "keywords": [
+    "seed",
+    "polymer",
+    "web-components",
+    "twilio",
+    "calls",
+    "browser-call",
+    "websocket",
+    "peer-to-peer",
+    "p2p"
+  ],
+  "ignore": [
+    "./utils/*",
+    "./demo-server/*",
+    "./demo-clients/*",
+    "./.dockerignore",
+    "./.editorconfig",
+    "./.gitattributes",
+    "./.git",
+    "./.gitignore",
+    "./.jshintrc",
+    "./demo.html",
+    "./Dockerfile",
+    "./index.html",
+    "./LICENSE"
+  ],
+  "main": "twilio-client.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer",
+    "es6-promise-polyfill": null,
+    "lodash": null,
+    "cachable-ajax": null,
+    "twilioclient-fixed": null,
+    "paper-button": "Polymer/paper-button",
+    "core-drawer-panel": "Polymer/core-drawer-panel",
+    "core-header-panel": "Polymer/core-header-panel",
+    "core-toolbar": "Polymer/core-toolbar",
+    "core-icon-button": "Polymer/core-icon-button",
+    "core-menu": "Polymer/core-menu",
+    "core-scaffold": "Polymer/core-scaffold",
+    "core-image": "Polymer/core-image",
+    "core-animated-pages": "Polymer/core-animated-pages",
+    "paper-item": "Polymer/paper-item",
+    "paper-input": "Polymer/paper-input"
+  },
+  "devDependencies": {
+    "polymer-test-tools": "Polymer/polymer-test-tools"
+  }
+}

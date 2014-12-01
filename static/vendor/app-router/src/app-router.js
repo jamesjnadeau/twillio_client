@@ -257,6 +257,7 @@
   function activateCustomElement(router, elementName, route, url, eventDetail) {
     var customElement = document.createElement(elementName);
     var routeArgs = utilities.routeArguments(route.getAttribute('path'), url.path, url.search, route.hasAttribute('regex'));
+console.log(eventDetail);
     for (var arg in routeArgs) {
       if (routeArgs.hasOwnProperty(arg)) {
         customElement[arg] = routeArgs[arg];

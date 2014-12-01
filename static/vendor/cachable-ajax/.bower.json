@@ -1,0 +1,32 @@
+{
+  "name": "cachable-ajax",
+  "version": "0.3.1",
+  "keywords": [
+    "seed",
+    "polymer",
+    "web-components",
+    "cache",
+    "local-storage",
+    "ajax"
+  ],
+  "main": "cachable-ajax.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^0.4.0",
+    "core-ajax": "Polymer/core-ajax#~0.4.2",
+    "core-localstorage": "Polymer/core-localstorage#~0.4.2",
+    "js-md5": "~1.1.0"
+  },
+  "devDependencies": {
+    "polymer-test-tools": "Polymer/polymer-test-tools#^0.4.0"
+  },
+  "homepage": "https://github.com/domderen/cachable-ajax",
+  "_release": "0.3.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.3.1",
+    "commit": "a383ffdd2a5b7fd9426ccb3280f14c58576d6645"
+  },
+  "_source": "git://github.com/domderen/cachable-ajax.git",
+  "_target": "*",
+  "_originalSource": "cachable-ajax"
+}

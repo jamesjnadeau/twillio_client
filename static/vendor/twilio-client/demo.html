@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>twilio-client Demo</title>
+
+  <script src="../platform/platform.js"></script>
+  <link rel="import" href="../core-scaffold/core-scaffold.html">
+  <link rel="import" href="../core-toolbar/core-toolbar.html">
+  <link rel="import" href="../core-menu/core-menu.html">
+  <link rel="import" href="../paper-item/paper-item.html">
+  <link rel="import" href="../core-animated-pages/core-animated-pages.html">
+  <link rel="import" href="../core-animated-pages/transitions/slide-from-right.html">
+  <link rel="import" href="../core-ajax/core-ajax.html">
+
+  <link rel="stylesheet" href="demo.css" shim-shadowdom>
+</head>
+<body unresolved fullbleed>
+
+<template is="auto-binding" id="t">
+  <core-scaffold id="scaffold">
+    <nav>
+      <core-toolbar>
+        <span>Twilio Client</span>
+      </core-toolbar>
+      <core-menu id="menu">
+        <template repeat="{{page, i in pages}}">
+          <paper-item icon="label{{route != page.hash ? '-outline' : ''}}"
+                      label="{{page.name}}">
+            <a href="{{page.url}}"></a>
+          </paper-item>
+        </template>
+      </core-menu>
+    </nav>
+
+    <core-toolbar tool flex>
+      <div flex>Demo Selector</div>
+    </core-toolbar>
+
+    <div layout horizontal center-center fit>
+      <core-animated-pages>
+        <section layout vertical center-center>
+          <h3>Twilio-Client Demo Application</h3>
+          <div>
+            <p>Please select a demo application from the left hand side menu.</p>
+            <p>On mobile, you can swipe to open the menu.</p>
+          </div>
+
+          <p>View on github: <a href="https://github.com/domderen/twilio-client">https://github.com/domderen/twilio-client</a></p>
+        </section>
+      </core-animated-pages>
+    </div>
+
+  </core-scaffold>
+
+</template>
+
+<script>
+  (function () {
+    "use strict";
+
+    var template = document.querySelector('#t');
+
+    template.pages = [
+      {name: 'Incoming call', url: 'bic-demo.html'},
+      {name: 'Outgoing call', url: 'boc-demo.html'},
+      {name: 'Browser to Browser', url: 'b2b-demo.html'},
+      {name: 'Promise demo', url: 'promise-demo.html'}
+    ];
+  })();
+</script>
+
+</body>
+</html>

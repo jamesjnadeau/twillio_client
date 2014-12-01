@@ -10,6 +10,9 @@ error_handlers:
   - file: index.html
 
 handlers:
+- url: /api/(.*\.php)
+  script: api/\1
+
 - url: /(.*\.(appcache|manifest))
   mime_type: text/cache-manifest
   static_files: static/\1

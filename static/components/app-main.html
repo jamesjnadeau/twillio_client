@@ -8,6 +8,7 @@
 <link rel="import" href="/vendor/paper-shadow/paper-shadow.html" >
 <link rel="import" href="/vendor/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="/vendor/core-icons/communication-icons.html">
+<link rel="import" href="/vendor/twilio-client/twilio-client.html">
 
 <link rel="import" href="/vendor/app-router/app-router.html">
 
@@ -29,6 +30,11 @@
 				redirect
 				></firebase-login>
 
+		<twilio-client id="twilio_client"
+			capailityTokenUrl="/api/capabilities.php"
+			number="{{call_number}}"
+			clientName="jenny"></twilio-client>
+
 		<core-drawer-panel force-narrow="true" >
 			<core-header-panel drawer>
 				<core-toolbar>
@@ -46,7 +52,7 @@
 					<paper-icon-button icon="communication:phone"></paper-icon-button>
 				</core-toolbar>
 				<div class="container" layout vertical>
-					<app-router id="router" init="manual" on-state-change="{{stateChange}}" mode="pushstate" >
+					<app-router id="router" init="manual" on-state-change="{{stateChange}}" mode="pushstate">
 						<!-- matches an exact path 
 						<app-route path="/home" import="/pages/home.html"></app-route>-->
 
@@ -67,8 +73,15 @@
 							<template>
 								<app-login auth="{{auth}}" hidden?="{{!auth.statusKnown || auth.user}}" ></app-login>
 							</template>
-						</app-route>-->
-						<app-route path="/login" import="/pages/app-login.html" element="app-login" ></app-route>
+						</app-route>
+						<app-route path="/login" import="/pages/app-login.html" element="app-login" auth ></app-route>
+						<app-route path="/test" import="/pages/app-test.html" element="app-test" auth ></app-route>-->
+						<!-- need to look into TemplateBinding.createInstance -->
+						<app-route path="/login" template>
+							<template >
+								<app-login auth="{{auth}}" ></app-login>
+							</template>
+						</app-route>
 
 						<!-- matches everything else -->
 						<app-route path="*" import="/pages/firebase-test.html" element="firebase-test" on-activate-route-start="{{homePage}}" ></app-route>
@@ -87,9 +100,36 @@
 					this.display_name = display_name;
 					this.location = this.firebase_url;
 					this.auth = this.$.login;
-					
+					this.log = '';
+
 					this.$.router.init();
-					
+
+					var self = this;
+					self.twilioClient = this.$.twilio_client;
+					console.log(self.twilioClient);
+					//twillio stuff
+					// Set up event listeners for custom events.
+					self.twilioClient.addEventListener('device-ready', function () {
+						self.log = "Ready";
+						console.log('ready');
+					});
+
+					self.twilioClient.addEventListener('device-error', function (e) {
+						self.log = "Error: " + e.detail.error.message;
+					});
+
+					self.twilioClient.addEventListener('device-connect', function () {
+						self.log = "Successfully established call";
+					});
+
+					self.twilioClient.addEventListener('device-disconnect', function () {
+						self.log = "Call ended";
+					});
+
+					self.twilioClient.addEventListener('device-incoming', function (e) {
+						self.log = "Incoming connection from " + e.detail.connection.parameters.From;
+						self.twilioClient.acceptConnection();
+					});
 				},
 				domReady: function() {
 					var self = this;
@@ -108,6 +148,9 @@
 					//document.removeEventListener('login', loginEvent);
 					document.addEventListener('login', loginEvent);
 					
+				},
+				logChange: function(event) {
+					console.log(this.log);
 				},
 				stateChange: function(event) {
 					console.log('stateChange', this.auth.statusKnown, event.detail.path);
