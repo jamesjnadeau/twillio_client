@@ -1,0 +1,104 @@
+<link rel="import" href="/vendor/firebase-element/firebase-element.html">
+<link rel="import" href="/vendor/paper-shadow/paper-shadow.html">
+<link rel="import" href="/components/app-globals.html">
+
+<polymer-element name="app-user" attributes="auth uid" >
+	<template>
+		<link rel='stylesheet' href='/css/default.css'/>
+		<app-globals firebase_url="{{firebase_url}}"></app-globals>
+
+		<paper-shadow  z="1" class="card">
+			<firebase-element id="base" 
+				on-data-change="{{dataChange}}" 
+				data="{{data}}" 
+				location="{{firebase_data_url}}" 
+				log 
+				data-change="{{dataChanged}}"
+				>
+			</firebase-element>
+
+			<h3>Top-level properties persist automatically:</h3>
+
+			<input value="{{data.name}}">
+			<br>
+			<input value="{{data.info}}">
+
+			<hr>
+
+			<h3>Nested properties must be persisted manually:</h3>
+
+			<input value="{{data.more.color}}">
+
+			<button on-tap="{{commitMore}}">Commit data.more</button>
+
+			<hr>
+
+			<h3>Remote Data</h3>
+			<pre>{{json}}</pre>
+
+			<hr>
+
+			<button on-tap="{{resetLocal}}">Reset Local</button>
+			<button on-tap="{{removeLocal}}">Remove Local</button>
+			<button on-tap="{{resetRemote}}">Reset remote</button>
+			<button on-tap="{{removeRemote}}">Remove Remote</button>
+		</paper-shadow>
+	</template>
+ 	<script>
+		Polymer({
+			ready: function() {
+				console.log(this.uid);
+				this.firebase_data_url = this.firebase_url+'/user/'+this.uid;
+				this.resetLocal = function() {
+					// direct setting of data is persisted automatically
+					this.data = {
+						name: 'anonymous',
+						info: 'none',
+						more: {
+							color: "yellow"
+						}
+					};
+				};
+
+				this.removeLocal = function() {
+					this.data = null;
+				};
+
+				this.resetRemote = function() {
+					// Simulate other actor setting data to same remote location
+					new Firebase(this.firebase_data_url).set({
+						name: 'anonymous',
+						info: 'none',
+						more: {
+							color: "yellow"
+						}
+					});
+				};
+
+				this.removeRemote = function() {
+					// Simulate other actor removing data from same remote location
+					new Firebase(this.firebase_data_url).remove();
+				};
+
+				this.commitMore = function() {
+					this.$.base.commitProperty('more');
+				};
+
+				this.dataChange = function() {
+					this.json = JSON.stringify(this.data, null, '\t');
+				};
+			},
+			domReady: function() {
+				console.log('data',this.data);
+				if(this.data === null) { //new user, save them
+					console.log('Saving new user');
+					this.data = this.auth.user
+				}
+			},
+			dataChanged: function() {
+				console.log('data changed', this.data);
+			}
+		});
+	</script>
+</polymer-element>
+  
