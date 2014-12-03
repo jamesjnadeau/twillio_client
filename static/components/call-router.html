@@ -4,28 +4,56 @@
 <link rel="import" href="/vendor/paper-input/paper-input.html">
 <link rel="import" href="/vendor/paper-dropdown/paper-dropdown.html">
 <link rel="import" href="/vendor/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="/vendor/paper-icon-button/paper-icon-button.html">
 
 <link rel="import" href="/components/app-globals.html">
 
-<polymer-element name="call-router" attributes="routerid next_routerid" >
+<polymer-element name="call-router" attributes="router_uid next_routerid" >
 	<template>
 		<link rel='stylesheet' href='/css/default.css'/>
-		<app-globals id="globals" firebase_url="{{firebase_url}}" ></app-globals>
+		<style>
+			.to { margin-right: 10px; }
+			.to h4 { padding-top: 15px; }
+		</style>
+		<app-globals id="globals" firebase_url="{{firebase_url}}" colors="{{colors}}" ></app-globals>
+		<firebase-element id="base" 
+				on-data-change="{{dataChange}}" 
+				data="{{data}}" 
+				location="{{firebase_data_url}}" 
+				log 
+				data-change="{{dataChanged}}"
+				>
+			</firebase-element>
 		<paper-shadow  z="1" class="card">
-			<paper-dropdown-menu label="Action">
-				<paper-dropdown class="dropdown">
-					<core-menu class="menu" on-core-select={{actionChange}}>
-						<template repeat="{{actions}}">
-							<paper-item>{{}}</paper-item>
-						</template>
-					</core-menu>
-				</paper-dropdown>
-			</paper-dropdown-menu>
+			<div layout horizontal>
+				<div>
+					<paper-dropdown-menu label="Action">
+						<paper-dropdown class="dropdown">
+							<core-menu class="menu" on-core-select={{actionChange}}>
+								<template repeat="{{actions}}">
+									<paper-item>{{}}</paper-item>
+								</template>
+							</core-menu>
+						</paper-dropdown>
+					</paper-dropdown-menu>
+				</div>
+				<div flex></div>
+				<div>
+					<paper-icon-button icon="delete"  on-tap="{{delete}}" ></paper-icon-button>
+					<paper-icon-button icon="{{expand_icon}}"  on-tap="{{expandedToggle}}" ></paper-icon-button>
+				</div>
+			</div>
+			
 			<!-- Forward --> 
-			<paper-shadow z="1" class="card" >
-				<h3>Forward</h3>
-				<paper-input label="Number" floatingLabel="true" value="{{data.option.number}}" ></paper-input>
-			</paper-shadow>
+			<div hidden?="{{currentAction != 'Forward'}}" >
+				<div layout horizontal >
+					<div class="to" >
+						<h4>To</h4>
+					</div>
+					
+					<paper-input label="Number" floatingLabel="true" value="{{data.option.number}}" flex ></paper-input>
+				</div>
+			</div>
 			
 		</paper-shadow>
 	</template>
@@ -36,9 +64,37 @@
 			Polymer({
 				ready: function() {
 					this.actions = actions;
+					this.expand_icon = 'more-horiz';
+					
+				},
+				domReady: function() {
+					console.log(this.router_uid);
+					this.firebase_data_url = this.firebase_url+'/routers/'+this.router_uid;
+				},
+				observe: {
+					// dataChanged only called if data is pointed at a new object
+					// changes to data's _properties or sub-properites are not observed_
+					data: 'dataChanged',
+					// dataNameChanged called if `data.name` changes
+					//'data.name': 'dataNameChanged'
+				},
+				dataChanged: function() {
+					console.log('data changed', this.data);
 				},
 				actionChange: function(event) {
 					console.log(event.detail.isSelected, event.detail.item.innerText);
+					this.currentAction = event.detail.item.innerText;
+					data.action = this.currentAction;
+				},
+				expandedToggle: function() {
+					if(this.expand_icon == 'more-vert') {
+						this.expand_icon = 'more-horiz';
+					} else {
+						this.expand_icon = 'more-vert'
+					}
+				},
+				delete: function() {
+					this.data = null;
 				}
 			});
 		})();

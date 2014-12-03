@@ -35,7 +35,7 @@
 			logout: function() { this.auth.logout(); window.location = '/';},
 			navUser: function() { this.nav('/user/'+this.auth.user.uid); },
 			navNumbers: function() { this.nav('/numbers/'+this.auth.user.uid); },
-			navRouting: function() { this.nav('/routing/'+this.auth.user.uid); },
+			navRouting: function() { this.nav('/routing/'); },
 			authChange: function() {
 				if(typeof this.auth.user.provider !== undefined) {
 					this.display_name = this.auth.user[this.auth.user.provider].displayName;

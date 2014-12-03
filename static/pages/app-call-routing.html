@@ -1,5 +1,7 @@
 <link rel="import" href="/vendor/firebase-element/firebase-element.html">
+<link rel="import" href="/vendor/paper-shadow/paper-shadow.html">
 <link rel="import" href="/vendor/paper-input/paper-input.html">
+<link rel="import" href="/vendor/paper-fab/paper-fab.html">
 
 <link rel="import" href="/components/app-globals.html">
 <link rel="import" href="/components/call-router.html">
@@ -7,37 +9,31 @@
 <polymer-element name="app-call-routing" attributes="auth routingid" >
 	<template>
 		<link rel='stylesheet' href='/css/default.css'/>
-		<app-globals firebase_url="{{firebase_url}}"></app-globals>
-
-			<!--<firebase-element id="base" 
-				on-data-change="{{dataChange}}" 
-				data="{{data}}" 
-				location="{{firebase_data_url}}" 
-				log 
-				data-change="{{dataChanged}}"
-				>
-			</firebase-element>
-
-			<div layout vertical >
-				<paper-input label="Display Name" floatingLabel="true" value="{{}}"></paper-input>
-				<paper-input label="Email" floatingLabel="true" value="{{data.email}}"></paper-input>
+		<app-globals id="globals" firebase_url="{{firebase_url}}" colors="{{colors}}" ></app-globals>
+			<div hidden?="{{routers.length}}">
+				<paper-shadow  z="1" class="card">
+					<h3>Add a route with the button below</h3>
+				</paper-shadow>
 			</div>
-
-			<h3>Remote Data</h3>
-			<pre>{{json}}</pre>
-
-			<hr>
-
-			<button on-tap="{{removeLocal}}">Remove Local</button>-->
-			<call-router ></call-router>
+			<template repeat="{{ router in routers }}">
+				<call-router router_uid={{router}}></call-router>
+			</template>
+			<div layout horizontal >
+				<span flex></span>
+				<paper-fab icon="add" style="background-color: {{colors.primary}};" on-tap="{{addRouter}}"></paper-fab>
+				<span flex></span>
+			</div>
 	</template>
  	<script>
 		(function() {
 			var login_saved = false;
 			Polymer({
 				ready: function() {
-					console.log(this.uid);
-					this.firebase_data_url = this.firebase_url+'/router/'+this.routingid;
+					
+					this.routers = []
+					this.firebase_data_url = this.firebase_url+'/routers/';
+					console.log(this.firebase_data_url)
+
 					this.resetLocal = function() {
 						// direct setting of data is persisted automatically
 						this.data = {
@@ -54,43 +50,37 @@
 					};
 				},
 				domReady: function() {
-					console.log('data',this.data);
-
-				},
-				observe: {
-					// dataChanged only called if data is pointed at a new object
-					// changes to data's _properties or sub-properites are not observed_
-					data: 'dataChanged',
-					// dataNameChanged called if `data.name` changes
-					//'data.name': 'dataNameChanged'
-				},
-				dataChanged: function() {
-					this.json = JSON.stringify(this.data, null, '\t');
-					console.log('data changed', this.data);
-					if(!login_saved) {
-						login_saved = true;
-						if(this.data.expires !== this.auth.user.expires) {
-							console.log('Saving user');
-							var display_name;
-							if(this.data.display_name) {
-								display_name = this.data.display_name;
-							} else {
-								display_name = this.auth.user[this.auth.user.provider].displayName;
+					//console.log('data',this.data);
+					var self = this;
+					var firebaseRouters = new Firebase(this.firebase_data_url)
+					var user_uid = this.auth.user.uid;
+					console.log('user_uid', user_uid);
+					/*
+							var newRouter = firebaseRouters.push({ user_uid: user_uid });
+							var uid = newRouter.key();
+							self.routers.push({uid:newRouter.key()});
+					*/
+					var myFirebaseRouters = firebaseRouters.orderByChild("user_uid").equalTo(user_uid);
+					myFirebaseRouters.on('child_added', function(snapshot) {
+						self.routers.push(snapshot.key())
+					});
+					myFirebaseRouters.on('child_removed', function(snapshot) {
+						console.log('child_removed', snapshot.key());
+						for(var i = 0; i < self.routers.length; i++) {
+							if(self.routers[i] == snapshot.key()) {
+								self.routers.splice(i, 1);
+								break;
 							}
-							
-							var email;
-							if(this.data.display_name) {
-								email = this.data.email;
-							} else {
-								email = this.auth.user[this.auth.user.provider].email;
-							}
-							
-							this.data = this.auth.user;
-							this.data.display_name = display_name;
-							this.data.email = email;
 						}
-						
-					}
+					});
+					
+				},
+				addRouter: function() {
+					var firebaseRouters = new Firebase(this.firebase_data_url)
+					var user_uid = this.auth.user.uid;
+					var newRouter = firebaseRouters.push({ user_uid: user_uid });
+					var uid = newRouter.key();
+					self.routers.push({uid:newRouter.key()});
 				}
 			});
 		})();

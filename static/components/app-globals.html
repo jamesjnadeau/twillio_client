@@ -1,15 +1,20 @@
-<polymer-element name="app-globals" attributes="auth firebase_url" >
+<polymer-element name="app-globals" attributes="firebase_url colors" >
 	<template>
 	</template>
 	<script>
 		(function() {
 			// these variables are shared by all instances of app-globals
 			var firebase_url = 'https://twilio-manager.firebaseio.com';
-
+			var colors = {
+				primary: '#6699CC',
+				secondary: '#FF9933',
+				accent: ' #CCCC33'
+			}
 			Polymer({
 				ready: function() {
 					// copy global values into instance properties
 					this.firebase_url = firebase_url;
+					this.colors = colors;
 				},
 			});
 		})();
