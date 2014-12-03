@@ -16,13 +16,13 @@
 <link rel="import" href="/vendor/app-router/app-router.html">
 
 
-
 <link rel="import" href="/components/app-globals.html" >
 <link rel="import" href="/components/app-menu.html" >
 <link rel="import" href="/components/app-phone.html" >
 
 <link rel="import" href="/pages/app-login.html" >
 <link rel="import" href="/pages/app-user.html" >
+<link rel="import" href="/pages/app-call-routing.html" >
 
 <polymer-element name="app-main" attributes="">
 	<template>
@@ -49,7 +49,7 @@
 					<paper-icon-button icon="search"></paper-icon-button>
 				</core-toolbar>
 				<div>
-					<app-menu display_name="{{display_name}}" auth={{auth}} ></app-menu>
+					<app-menu auth="{{auth}}" nav="{{nav}}" ></app-menu>
 				</div>
 			</core-header-panel>
 			<core-header-panel main>
@@ -97,6 +97,12 @@
 							</template>
 						</app-route>
 
+						<app-route path="/routing/:routingid" template>
+							<template >
+								<app-call-routing auth="{{auth}}" routingid="{{routingid}}"></app-user>
+							</template>
+						</app-route>
+
 						<!-- matches everything else -->
 						<app-route path="*" import="/pages/firebase-test.html" element="firebase-test" on-activate-route-start="{{homePage}}" ></app-route>
 					</app-router>
@@ -118,6 +124,10 @@
 
 					this.$.router.init();
 					this.twilioClient = this.$.twilio_client;
+					var self = this;
+					this.nav = function(url) {
+						self.$.router.go(url, {replace: true});
+					}
 				},
 				domReady: function() {
 					var self = this;
@@ -127,13 +137,11 @@
 							var user = event.detail.user;
 							console.log('loginEvent', user);
 							if(typeof user !== 'undefiend' && typeof user.google !== 'undefiend') {
-								this.display_name = user.google.displayName;
+								self.display_name = user.google.displayName;
 							}
-							self.$.router.go('/user/'+user.uid, {replace: true});
-							//window.locaiton='/';
+							this.nav('/user/'+user.uid);
 						}
 					}
-					//document.removeEventListener('login', loginEvent);
 					document.addEventListener('login', loginEvent);
 					console.log(this.auth.user);
 				},
@@ -166,6 +174,13 @@
 					// this is only called when you navigate to the home page
 					console.log(event.detail.path);
 				},
+				userChange: function(event) {
+					console.log('userChange', event);
+					var user = this.user;
+					if(typeof user !== 'undefiend' && typeof user.google !== 'undefiend') {
+						self.display_name = user.google.displayName;
+					}
+				}
 			});
 		})();
 	</script>

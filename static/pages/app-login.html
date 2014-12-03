@@ -48,23 +48,19 @@
 			Polymer({
 				ready: function() {
 					console.log(this.auth);
-					//this.auth = this.$.login;
-					//this.auth.provider = 'google';
-
+					var self = this;
 					this.login = function() {
-						var params;
+						var params = {scope:'email'};
+						/*
 						try {
-							params = JSON.parse(document.querySelector("#params").value);
+							params = JSON.parse(self.params);
+							console.log(self.params);
 						} catch (e) {
 							params = null;
-						}
-						if (this.provider == 'password') {
-							params = this.params || {};
-							params.email = this.email;
-							params.password = this.password;
-						}
+						}*/
+						console.log('params', params);
 
-						this.auth.login(params);
+						self.auth.login(params);
 					};
 
 					this.logout = function() {
@@ -77,6 +73,7 @@
 				domReady: function() {
 					console.log(this.auth);
 					this.auth.provider = 'google';
+					this.params = "{scope:'email'}";
 				}
 			});
 		})();

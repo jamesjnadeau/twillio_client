@@ -5,13 +5,19 @@
 
 <link rel="import" href="/components/app-globals.html">
 
-<polymer-element name="app-menu" attributes="display_name auth">
+<polymer-element name="app-menu" attributes="auth nav">
 	<template>
 		<core-menu selected="0" on-core-select="{{selectAction}}">>
 			<paper-item>{{display_name}}</paper-item>
-			<paper-item ><core-icon icon="settings" ></core-icon><div>Settings</div></paper-item>
-			<paper-item ><core-icon icon="settings-phone" ></core-icon><div>Numbers</div></paper-item>
-			<paper-item ><core-icon icon="explore" ></core-icon><div>Routing</div></paper-item>
+			<paper-item on-tap="{{navUser}}" >
+				<core-icon icon="settings" ></core-icon><div>Settings</div>
+			</paper-item>
+			<paper-item on-tap="{{navNumbers}}" >
+				<core-icon icon="settings-phone" ></core-icon><div>Numbers</div>
+			</paper-item>
+			<paper-item on-tap="{{navRouting}}" >
+				<core-icon icon="explore" ></core-icon><div>Routing</div>
+			</paper-item>
 			<paper-item on-tap="{{logout}}" hidden?="{logged_in}}" >
 				<core-icon icon="close" ></core-icon><div>Logout</div>
 			</paper-item>
@@ -20,14 +26,18 @@
 	<script>
 		Polymer({
 			ready: function() {
-				this.logged_in = false;
-				this.logout = function() {
-					this.auth.logout();
-					window.location = '/';
-				}
 			},
 			domReady: function() {
-				
+			},
+			observe: {
+				auth: 'authChange'
+			},
+			logout: function() { this.auth.logout(); window.location = '/';},
+			navUser: function() { this.nav('/user/'+this.auth.user.uid); },
+			navNumbers: function() { this.nav('/numbers/'+this.auth.user.uid); },
+			navRouting: function() { this.nav('/routing/'+this.auth.user.uid); },
+			authChange: function() {
+				this.display_name = this.auth.user[this.auth.user.provider].displayName;
 			}
 		});
 	</script>

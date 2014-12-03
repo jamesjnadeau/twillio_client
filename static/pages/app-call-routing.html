@@ -1,0 +1,99 @@
+<link rel="import" href="/vendor/firebase-element/firebase-element.html">
+<link rel="import" href="/vendor/paper-input/paper-input.html">
+
+<link rel="import" href="/components/app-globals.html">
+<link rel="import" href="/components/call-router.html">
+
+<polymer-element name="app-call-routing" attributes="auth routingid" >
+	<template>
+		<link rel='stylesheet' href='/css/default.css'/>
+		<app-globals firebase_url="{{firebase_url}}"></app-globals>
+
+			<!--<firebase-element id="base" 
+				on-data-change="{{dataChange}}" 
+				data="{{data}}" 
+				location="{{firebase_data_url}}" 
+				log 
+				data-change="{{dataChanged}}"
+				>
+			</firebase-element>
+
+			<div layout vertical >
+				<paper-input label="Display Name" floatingLabel="true" value="{{}}"></paper-input>
+				<paper-input label="Email" floatingLabel="true" value="{{data.email}}"></paper-input>
+			</div>
+
+			<h3>Remote Data</h3>
+			<pre>{{json}}</pre>
+
+			<hr>
+
+			<button on-tap="{{removeLocal}}">Remove Local</button>-->
+			<call-router ></call-router>
+	</template>
+ 	<script>
+		(function() {
+			var login_saved = false;
+			Polymer({
+				ready: function() {
+					console.log(this.uid);
+					this.firebase_data_url = this.firebase_url+'/router/'+this.routingid;
+					this.resetLocal = function() {
+						// direct setting of data is persisted automatically
+						this.data = {
+							name: 'anonymous',
+							info: 'none',
+							more: {
+								color: "yellow"
+							}
+						};
+					};
+
+					this.removeLocal = function() {
+						this.data = null;
+					};
+				},
+				domReady: function() {
+					console.log('data',this.data);
+
+				},
+				observe: {
+					// dataChanged only called if data is pointed at a new object
+					// changes to data's _properties or sub-properites are not observed_
+					data: 'dataChanged',
+					// dataNameChanged called if `data.name` changes
+					//'data.name': 'dataNameChanged'
+				},
+				dataChanged: function() {
+					this.json = JSON.stringify(this.data, null, '\t');
+					console.log('data changed', this.data);
+					if(!login_saved) {
+						login_saved = true;
+						if(this.data.expires !== this.auth.user.expires) {
+							console.log('Saving user');
+							var display_name;
+							if(this.data.display_name) {
+								display_name = this.data.display_name;
+							} else {
+								display_name = this.auth.user[this.auth.user.provider].displayName;
+							}
+							
+							var email;
+							if(this.data.display_name) {
+								email = this.data.email;
+							} else {
+								email = this.auth.user[this.auth.user.provider].email;
+							}
+							
+							this.data = this.auth.user;
+							this.data.display_name = display_name;
+							this.data.email = email;
+						}
+						
+					}
+				}
+			});
+		})();
+	</script>
+</polymer-element>
+  

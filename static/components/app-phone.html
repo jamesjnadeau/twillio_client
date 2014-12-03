@@ -6,10 +6,15 @@
 
 		<paper-icon-button icon="communication:phone" on-tap="{{phoneTapped}}" style="color: {{phone_color}}"></paper-icon-button>
 
-		<paper-dialog id="phoneDialog" transition="core-transition-top" vertical>
+		<paper-dialog id="phoneDialog" transition="core-transition-top" vertical layout>
 			<h2>Make a Call</h2>
-			<paper-input label="Number" value="{{phoneNumber}}" ></paper-input>
-			<paper-button raised on-tap="{{phoneDialogAction}}" style="background-color: #CCCC33;" >{{phoneDialogActionLabel}}</paper-button>
+			<div>
+				<paper-input label="Number" value="{{phoneNumber}}" ></paper-input>
+			</div>
+			<div layout horizontal>
+				<paper-button flex raised on-tap="{{phoneDialogAction}}" style="background-color: #CCCC33;" >{{phoneDialogActionLabel}}</paper-button>
+			</div>
+			
 		</paper-dialog>
 
 	</template>
