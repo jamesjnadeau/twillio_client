@@ -37,7 +37,9 @@
 			navNumbers: function() { this.nav('/numbers/'+this.auth.user.uid); },
 			navRouting: function() { this.nav('/routing/'+this.auth.user.uid); },
 			authChange: function() {
-				this.display_name = this.auth.user[this.auth.user.provider].displayName;
+				if(typeof this.auth.user.provider !== undefined) {
+					this.display_name = this.auth.user[this.auth.user.provider].displayName;
+				}
 			}
 		});
 	</script>

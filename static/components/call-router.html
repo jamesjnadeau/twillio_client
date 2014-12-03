@@ -1,12 +1,13 @@
 <link rel="import" href="/vendor/paper-shadow/paper-shadow.html">
 <link rel="import" href="/vendor/core-menu/core-menu.html">
 <link rel="import" href="/vendor/paper-item/paper-item.html">
+<link rel="import" href="/vendor/paper-input/paper-input.html">
 <link rel="import" href="/vendor/paper-dropdown/paper-dropdown.html">
 <link rel="import" href="/vendor/paper-dropdown-menu/paper-dropdown-menu.html">
 
 <link rel="import" href="/components/app-globals.html">
 
-<polymer-element name="call-router" attributes="" >
+<polymer-element name="call-router" attributes="routerid next_routerid" >
 	<template>
 		<link rel='stylesheet' href='/css/default.css'/>
 		<app-globals id="globals" firebase_url="{{firebase_url}}" ></app-globals>
@@ -20,12 +21,18 @@
 					</core-menu>
 				</paper-dropdown>
 			</paper-dropdown-menu>
+			<!-- Forward --> 
+			<paper-shadow z="1" class="card" >
+				<h3>Forward</h3>
+				<paper-input label="Number" floatingLabel="true" value="{{data.option.number}}" ></paper-input>
+			</paper-shadow>
+			
 		</paper-shadow>
 	</template>
 	<script>
 		(function() {
 			// these variables are shared by all instances of app-globals
-			var actions = [ 'Answer', 'Record', 'Menu'];
+			var actions = [ 'Forward', 'Message', 'Recording', 'Menu'];
 			Polymer({
 				ready: function() {
 					this.actions = actions;
