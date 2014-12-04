@@ -14,7 +14,7 @@
 	<template>
 		<link rel='stylesheet' href='/css/default.css'/>
 		<app-globals id="globals" firebase_url="{{firebase_url}}" colors="{{colors}}" ></app-globals>
-		<div hidden?="{{contacts.length || contacts_not_loaded }}">
+		<div hidden?="{{contacts.length}}">
 			<paper-shadow  z="1" class="card">
 				<h3>Add a route with the button below</h3>
 			</paper-shadow>
@@ -24,7 +24,7 @@
 			<app-contact uid={{contact}}></app-contact>
 		</template>
 		
-		<div layout horizontal hidden?="{{contacts_not_loaded }}">
+		<div layout horizontal >
 			<span flex></span>
 			<paper-fab icon="add" style="background-color: {{colors.primary}};" on-tap="{{addNew}}"></paper-fab>
 			<span flex two></span>
@@ -44,7 +44,6 @@
 			Polymer({
 				ready: function() {
 					this.contacts = [];
-					this.contacts_not_loaded = true;
 					this.lastDeleted = false;
 					this.firebase_data_url = this.firebase_url+'/contacts/';
 					console.log(this.firebase_data_url)
@@ -70,7 +69,6 @@
 					var user_uid = this.auth.user.uid;
 					var usersfirebaseRoot = firebaseRoot.orderByChild("user_uid").equalTo(user_uid);
 					usersfirebaseRoot.on('child_added', function(snapshot) {
-						self.contacts_not_loaded = true;
 						self.contacts.push(snapshot.key())
 					});
 					usersfirebaseRoot.on('child_removed', function(snapshot) {
