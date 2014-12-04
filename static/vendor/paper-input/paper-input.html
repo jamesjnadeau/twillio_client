@@ -56,7 +56,7 @@ to submitting a `paper-input`.
   </style>
 
   <paper-input-decorator id="decorator" label="{{label}}" floatingLabel="{{floatingLabel}}" value="{{value}}" disabled?="{{disabled}}">
-    <input is="core-input" value="{{value}}" committedValue="{{committedValue}}" on-change="{{changeAction}}" disabled?="{{disabled}}">
+    <input is="core-input" value="{{value}}" type="{{type}}" committedValue="{{committedValue}}" on-change="{{changeAction}}" disabled?="{{disabled}}">
   </paper-input-decorator>
 
 </template>
@@ -97,7 +97,9 @@ to submitting a `paper-input`.
 
       value: '',
 
-      committedValue: ''
+      committedValue: '',
+      
+      type: 'text',
 
     },
 

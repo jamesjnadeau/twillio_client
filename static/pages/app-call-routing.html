@@ -6,7 +6,7 @@
 <link rel="import" href="/components/app-globals.html">
 <link rel="import" href="/components/call-router.html">
 
-<polymer-element name="app-call-routing" attributes="auth routingid" >
+<polymer-element name="app-call-routing" attributes="auth" >
 	<template>
 		<link rel='stylesheet' href='/css/default.css'/>
 		<app-globals id="globals" firebase_url="{{firebase_url}}" colors="{{colors}}" ></app-globals>
@@ -21,7 +21,8 @@
 			<div layout horizontal >
 				<span flex></span>
 				<paper-fab icon="add" style="background-color: {{colors.primary}};" on-tap="{{addRouter}}"></paper-fab>
-				<span flex></span>
+				<span flex two></span>
+				<span flex three></span>
 			</div>
 	</template>
  	<script>

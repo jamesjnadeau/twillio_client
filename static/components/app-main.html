@@ -22,6 +22,7 @@
 
 <link rel="import" href="/pages/app-login.html" >
 <link rel="import" href="/pages/app-user.html" >
+<link rel="import" href="/pages/app-contacts.html" >
 <link rel="import" href="/pages/app-call-routing.html" >
 
 <polymer-element name="app-main" attributes="">
@@ -58,33 +59,9 @@
 					<span flex>Twillio Client</span>
 					<app-phone twilioClient="{{twilioClient}}" ></app-phone>
 				</core-toolbar>
-				
+
 				<div class="container" layout vertical>
 					<app-router id="router" init="manual" on-state-change="{{stateChange}}" mode="pushstate">
-						<!-- matches an exact path 
-						<app-route path="/home" import="/pages/home.html"></app-route>-->
-
-						<!-- matches using a wildcard 
-						<app-route path="/customer/*" import="/pages/customer-page.html"></app-route>-->
-
-						<!-- matches using a path variable 
-						<app-route path="/order/:id" import="/pages/order-page.html"></app-route>-->
-
-						<!-- matches a pattern like '/word/number' 
-						<app-route path="/^\/\w+\/\d+$/i" regex import="/pages/regex-page.html"></app-route>-->
-
-							<!--
-							<app-login auth="{{auth}}" hidden?="{{!auth.statusKnown || auth.user}}" ></app-loging>
-
-
-						<app-route path="/login">
-							<template>
-								<app-login auth="{{auth}}" hidden?="{{!auth.statusKnown || auth.user}}" ></app-login>
-							</template>
-						</app-route>
-						<app-route path="/login" import="/pages/app-login.html" element="app-login" auth ></app-route>
-						<app-route path="/test" import="/pages/app-test.html" element="app-test" auth ></app-route>-->
-						<!-- need to look into TemplateBinding.createInstance -->
 						<app-route path="/login" template>
 							<template >
 								<app-login auth="{{auth}}" ></app-login>
@@ -97,11 +74,30 @@
 							</template>
 						</app-route>
 
-						<app-route path="/routing" template>
+						<app-route path="/messages" template>
 							<template >
-								<app-call-routing auth="{{auth}}" ></app-user>
+								<app-contacts auth="{{auth}}" ></app-contacts>
 							</template>
 						</app-route>
+
+						<app-route path="/contacts" template>
+							<template >
+								<app-contacts auth="{{auth}}" ></app-contacts>
+							</template>
+						</app-route>
+
+						<app-route path="/numbers" template>
+							<template >
+								<app-contacts auth="{{auth}}" ></app-contacts>
+							</template>
+						</app-route>
+
+						<app-route path="/routing" template>
+							<template >
+								<app-call-routing auth="{{auth}}" ></app-call-routing>
+							</template>
+						</app-route>
+
 
 						<!-- matches everything else -->
 						<app-route path="*" import="/pages/firebase-test.html" element="firebase-test" on-activate-route-start="{{homePage}}" ></app-route>
@@ -143,18 +139,15 @@
 						}
 					}
 					document.addEventListener('login', loginEvent);
-					console.log(this.auth.user);
 				},
 				logChange: function(event) {
 					console.log(this.log);
 				},
 				stateChange: function(event) {
-					console.log('stateChange', this.auth.statusKnown, event.detail.path);
 					var self = this;
 					if(wait_for_status_semaphore) {
 						wait_for_status_semaphore = false;
 						var wait_for_status = function() {
-							console.log('wait_for_status', self.statusKnown);
 							if(self.statusKnown) {
 								//redirect to the login page if not signed in
 								if (!self.auth.user && event.detail.path !== '/login') {
@@ -172,10 +165,8 @@
 				},
 				homePage: function(event) {
 					// this is only called when you navigate to the home page
-					console.log(event.detail.path);
 				},
 				userChange: function(event) {
-					console.log('userChange', event);
 					var user = this.user;
 					if(typeof user !== 'undefiend' && typeof user.google !== 'undefiend') {
 						self.display_name = user.google.displayName;

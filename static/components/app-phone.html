@@ -1,15 +1,14 @@
-<link rel="import" href="/vendor/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/vendor/paper-fab/paper-fab.html">
 <link rel="import" href="/vendor/core-icons/communication-icons.html">
 <link rel="import" href="/vendor/paper-dialog/paper-dialog.html">
 <polymer-element name="app-phone" attributes="twilioClient" >
 	<template>
-
-		<paper-icon-button icon="communication:phone" on-tap="{{phoneTapped}}" style="color: {{phone_color}}"></paper-icon-button>
+		<paper-fab mini icon="communication:call" on-tap="{{phoneTapped}}" style="background-color: {{phone_color}}"></paper-fab>
 
 		<paper-dialog id="phoneDialog" transition="core-transition-top" vertical layout>
 			<h2>Make a Call</h2>
 			<div>
-				<paper-input label="Number" value="{{phoneNumber}}" ></paper-input>
+				<paper-input label="Number" value="{{phoneNumber}}" type="tel" ></paper-input>
 			</div>
 			<div layout horizontal>
 				<paper-button flex raised on-tap="{{phoneDialogAction}}" style="background-color: #CCCC33;" >{{phoneDialogActionLabel}}</paper-button>

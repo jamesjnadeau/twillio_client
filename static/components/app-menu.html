@@ -1,16 +1,26 @@
 
 <link rel="import" href="/vendor/core-menu/core-menu.html">
 <link rel="import" href="/vendor/core-icon/core-icon.html">
+<link rel="import" href="/vendor/core-icons/communication-icons.html">
 <link rel="import" href="/vendor/paper-item/paper-item.html">
 
 <link rel="import" href="/components/app-globals.html">
 
 <polymer-element name="app-menu" attributes="auth nav">
 	<template>
+		<style>
+			paper-item div {margin-left: 10px;}
+		</style>
 		<core-menu selected="0" on-core-select="{{selectAction}}">>
 			<paper-item>{{display_name}}</paper-item>
 			<paper-item on-tap="{{navUser}}" >
 				<core-icon icon="settings" ></core-icon><div>Settings</div>
+			</paper-item>
+			<paper-item on-tap="{{navMessages}}" >
+				<core-icon icon="communication:voicemail" ></core-icon><div>Messages</div>
+			</paper-item>
+			<paper-item on-tap="{{navContacts}}" >
+				<core-icon icon="communication:contacts" ></core-icon><div>Contacts</div>
 			</paper-item>
 			<paper-item on-tap="{{navNumbers}}" >
 				<core-icon icon="settings-phone" ></core-icon><div>Numbers</div>
@@ -34,8 +44,10 @@
 			},
 			logout: function() { this.auth.logout(); window.location = '/';},
 			navUser: function() { this.nav('/user/'+this.auth.user.uid); },
+			navMessages: function() { this.nav('/messages'); },
+			navContacts: function() { this.nav('/contacts'); },
 			navNumbers: function() { this.nav('/numbers/'+this.auth.user.uid); },
-			navRouting: function() { this.nav('/routing/'); },
+			navRouting: function() { this.nav('/routing'); },
 			authChange: function() {
 				if(typeof this.auth.user.provider !== undefined) {
 					this.display_name = this.auth.user[this.auth.user.provider].displayName;

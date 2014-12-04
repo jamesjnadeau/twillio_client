@@ -42,3 +42,9 @@ core-toolbar {
 paper-item div {
 	margin-left: 10px;
 }
+
+paper-toast {
+	bottom: 0;
+	left: 0;
+	width: 100%;
+}

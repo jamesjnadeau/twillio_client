@@ -29,6 +29,18 @@
 			<hr>
 
 			<button on-tap="{{removeLocal}}">Remove Local</button>
+			
+			<hr>
+			
+			<h3>Connect to Twillio</h3>
+			<style type="text/css">
+				#twilio-connect-button {
+					background: url(https://www.twilio.com/bundles/connect-apps/img/connect-button.png);
+					width: 130px; height: 34px; display: block; margin: 0 auto;
+				}
+				#twilio-connect-button:hover { background-position: 0 34px; }
+			</style>
+			<a href="https://www.twilio.com/authorize/CNc094f7fbc9c64fc5ef6e2571b64bc3f2" id="twilio-connect-button"></a>
 		</paper-shadow>
 	</template>
  	<script>
