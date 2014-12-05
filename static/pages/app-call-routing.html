@@ -2,6 +2,8 @@
 <link rel="import" href="/vendor/paper-shadow/paper-shadow.html">
 <link rel="import" href="/vendor/paper-input/paper-input.html">
 <link rel="import" href="/vendor/paper-fab/paper-fab.html">
+<link rel="import" href="/vendor/paper-toast/paper-toast.html">
+
 
 <link rel="import" href="/components/app-globals.html">
 <link rel="import" href="/components/call-router.html">
@@ -10,20 +12,25 @@
 	<template>
 		<link rel='stylesheet' href='/css/default.css'/>
 		<app-globals id="globals" firebase_url="{{firebase_url}}" colors="{{colors}}" ></app-globals>
-			<div hidden?="{{routers.length}}">
-				<paper-shadow  z="1" class="card">
-					<h3>Add a route with the button below</h3>
-				</paper-shadow>
+		<div hidden?="{{routers.length}}">
+			<paper-shadow  z="1" class="card">
+				<h3>Add a route with the button below</h3>
+			</paper-shadow>
+		</div>
+		<template repeat="{{ router in routers }}">
+			<call-router router_uid={{router}} ></call-router>
+		</template>
+		<div layout horizontal >
+			<span flex></span>
+			<paper-fab icon="add" style="background-color: {{colors.primary}};" on-tap="{{addNew}}"></paper-fab>
+			<span flex two></span>
+			<span flex three></span>
+		</div>
+		<paper-toast id="undoDeleteToast" role="alert" text="Record Deleted" duration="7000" autoCloseDisabled="true" style="background-color: {{colors.secondary}}" >
+			<div style="color: {{colors.primary}};" on-tap="{{undoDelete}}">
+				<paper-fab mini icon="undo" ></paper-fab>
 			</div>
-			<template repeat="{{ router in routers }}">
-				<call-router router_uid={{router}}></call-router>
-			</template>
-			<div layout horizontal >
-				<span flex></span>
-				<paper-fab icon="add" style="background-color: {{colors.primary}};" on-tap="{{addRouter}}"></paper-fab>
-				<span flex two></span>
-				<span flex three></span>
-			</div>
+		</paper-toast>
 	</template>
  	<script>
 		(function() {
@@ -51,37 +58,32 @@
 					};
 				},
 				domReady: function() {
-					//console.log('data',this.data);
 					var self = this;
-					var firebaseRouters = new Firebase(this.firebase_data_url)
+					var firebaseRoot = new Firebase(this.firebase_data_url);
 					var user_uid = this.auth.user.uid;
-					console.log('user_uid', user_uid);
-					/*
-							var newRouter = firebaseRouters.push({ user_uid: user_uid });
-							var uid = newRouter.key();
-							self.routers.push({uid:newRouter.key()});
-					*/
-					var myFirebaseRouters = firebaseRouters.orderByChild("user_uid").equalTo(user_uid);
-					myFirebaseRouters.on('child_added', function(snapshot) {
+					var usersfirebaseRoot = firebaseRoot.orderByChild("user_uid").equalTo(user_uid);
+					usersfirebaseRoot.on('child_added', function(snapshot) {
 						self.routers.push(snapshot.key())
 					});
-					myFirebaseRouters.on('child_removed', function(snapshot) {
-						console.log('child_removed', snapshot.key());
+					usersfirebaseRoot.on('child_removed', function(snapshot) {
+						self.lastDeleted = snapshot.val();
 						for(var i = 0; i < self.routers.length; i++) {
 							if(self.routers[i] == snapshot.key()) {
 								self.routers.splice(i, 1);
+								self.$.undoDeleteToast.show();
 								break;
 							}
 						}
 					});
-					
+					this.firebase_ref = firebaseRoot;
 				},
-				addRouter: function() {
-					var firebaseRouters = new Firebase(this.firebase_data_url)
+				addNew: function() {
 					var user_uid = this.auth.user.uid;
-					var newRouter = firebaseRouters.push({ user_uid: user_uid });
-					var uid = newRouter.key();
-					self.routers.push({uid:newRouter.key()});
+					var newStuff = this.firebase_ref.push({ user_uid: user_uid });
+				},
+				undoDelete: function() {
+					console.log('undoDelete', this.lastDeleted);
+					var newStuff = this.firebase_ref.push(this.lastDeleted);
 				}
 			});
 		})();

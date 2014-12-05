@@ -1,17 +1,28 @@
 <link rel="import" href="/vendor/paper-fab/paper-fab.html">
 <link rel="import" href="/vendor/core-icons/communication-icons.html">
 <link rel="import" href="/vendor/paper-dialog/paper-dialog.html">
-<polymer-element name="app-phone" attributes="twilioClient" >
+<polymer-element name="app-phone" attributes="twilioClient auth" >
 	<template>
-		<paper-fab mini icon="communication:call" on-tap="{{phoneTapped}}" style="background-color: {{phone_color}}"></paper-fab>
+		<paper-fab mini hidden?="{{!twilioClient.capabilityTokenUrl}}" icon="communication:call" on-tap="{{phoneTapped}}" style="background-color: {{phone_color}}"></paper-fab>
 
-		<paper-dialog id="phoneDialog" transition="core-transition-top" vertical layout>
+		<paper-dialog id="phoneCallDialog" transition="core-transition-top" vertical layout>
 			<h2>Make a Call</h2>
 			<div>
 				<paper-input label="Number" value="{{phoneNumber}}" type="tel" ></paper-input>
 			</div>
 			<div layout horizontal>
-				<paper-button flex raised on-tap="{{phoneDialogAction}}" style="background-color: #CCCC33;" >{{phoneDialogActionLabel}}</paper-button>
+				<paper-button flex raised on-tap="{{phoneCallDialogAction}}" style="background-color: #CCCC33;" >{{phoneCallDialogActionLabel}}</paper-button>
+			</div>
+			
+		</paper-dialog>
+		
+		<paper-dialog id="phoneAnswerDialog" transition="core-transition-top" vertical layout>
+			<h2>Call From</h2>
+			<div>
+				<paper-input label="Number" value="{{phoneNumber}}" type="tel" ></paper-input>
+			</div>
+			<div layout horizontal>
+				<paper-button flex raised on-tap="{{phoneAnswerDialogAction}}" style="background-color: #CCCC33;" >{{phoneCallDialogActionLabel}}</paper-button>
 			</div>
 			
 		</paper-dialog>
@@ -21,9 +32,9 @@
 		(function() {
 			Polymer({
 				ready: function() {
-					this.phoneDialogActionLabel = "Call";
-					
-					
+					this.phoneCallDialogActionLabel = "Call";
+					this.status = false;
+					this.incomingCall = false;
 
 					
 				},
@@ -49,25 +60,38 @@
 					self.twilioClient.addEventListener('device-disconnect', function () {
 						console.log("Call ended");
 						self.phone_color = 'orange';
+						setTimeout(function() { self.phone_color = 'green'; }, 2000);
 					});
 
 					self.twilioClient.addEventListener('device-incoming', function (e) {
 						console.log("Incoming connection from " + e.detail.connection.parameters.From);
 						//self.twilioClient.acceptConnection();
 						self.phone_color = 'orange';
+						this.incomingCall = true;
 					});
-					//kick it off.
-					self.twilioClient.init();
+					//kick it off. done in app-main
+					//self.twilioClient.init();
 				},
 				phoneTapped: function(event) {
 					console.log('phone');
-					this.$.phoneDialog.toggle();
-					
+					this.$.phoneCallDialog.toggle();
 				},
-				phoneDialogAction: function(event) {
-					console.log('calling '+this.phoneNumber);
-					this.twilioClient.call(this.phoneNumber);
-				}
+				phoneCallDialogAction: function(event) {
+					switch(this.phoneCallDialogActionLabel) {
+						case 'Call':
+							console.log('calling '+this.phoneNumber);
+							this.twilioClient.call(this.phoneNumber);
+							this.phoneCallDialogActionLabel = "Hang Up";
+							break;
+						case 'Hang Up': 
+							this.twilioClient.hangUp();
+							this.phoneCallDialogActionLabel = "Call";
+							break;
+					}
+				},
+				phoneAnswerDialogAction: function(event) {
+				
+			}
 			});
 		})();
 	</script>

@@ -135,7 +135,8 @@
 							if(typeof user !== 'undefiend' && typeof user.google !== 'undefiend') {
 								self.display_name = user.google.displayName;
 							}
-							this.nav('/user/'+user.uid);
+							self.twilioClient.init();
+							self.nav('/user/'+encodeURIComponent(user.uid));
 						}
 					}
 					document.addEventListener('login', loginEvent);
@@ -168,8 +169,11 @@
 				},
 				userChange: function(event) {
 					var user = this.user;
-					if(typeof user !== 'undefiend' && typeof user.google !== 'undefiend') {
-						self.display_name = user.google.displayName;
+					if(typeof user !== 'undefiend') {
+						if(this.capability_url == false) {
+							this.capability_url = '/api/capabilities.php?+uid='+user.uid;
+							this.twilioClient.init();
+						}
 					}
 				}
 			});

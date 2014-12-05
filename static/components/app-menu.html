@@ -43,13 +43,14 @@
 				auth: 'authChange'
 			},
 			logout: function() { this.auth.logout(); window.location = '/';},
-			navUser: function() { this.nav('/user/'+this.auth.user.uid); },
+			navUser: function() { this.nav('/user/'+encodeURIComponent(this.auth.user.uid)) },
 			navMessages: function() { this.nav('/messages'); },
 			navContacts: function() { this.nav('/contacts'); },
 			navNumbers: function() { this.nav('/numbers/'+this.auth.user.uid); },
 			navRouting: function() { this.nav('/routing'); },
 			authChange: function() {
-				if(typeof this.auth.user.provider !== undefined) {
+				console.log(this.auth.user);
+				if(this.auth.user !== null && typeof this.auth.user !== 'undefined') {
 					this.display_name = this.auth.user[this.auth.user.provider].displayName;
 				}
 			}
