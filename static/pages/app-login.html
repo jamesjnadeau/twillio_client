@@ -1,45 +1,49 @@
 <link rel="import" href="/vendor/paper-shadow/paper-shadow.html">
+<link rel="import" href="/vendor/paper-button/paper-button.html">
 <link rel="import" href="/components/app-globals.html">
 
 <polymer-element name="app-login" attributes="auth">
 	<template>
 		<link rel='stylesheet' href='/css/default.css'/>
-		<app-globals id="globals" firebase_url="{{firebase_url}}" ></app-globals>
+		<app-globals id="globals" firebase_url="{{firebase_url}}" colors="{{colors}}" ></app-globals>
 		<paper-shadow z="1" class="card" >
-			Firebase location:
-			<input value="{{firebase_url}}" disabled>
-			<input value="{{testing}}" disabled>
-			<br>
+			<div hidden?="{{true}}">
+				Firebase location:
+				<input value="{{firebase_url}}" disabled>
+				<input value="{{testing}}" disabled>
+				<br>
 
-			Provider type: 
-			<select value="{{auth.provider}}">
-				<option selected >google</option>
-				<!--<option>anonymous</option>
-					<option>facebook</option> -->
-				<option>github</option>
-				<!--<option>twitter</option>
-					<option>password</option> -->
-			</select>
-			<em>Only 'anonymous', 'google', and 'password' are activated for demo Firebase account</em>
-			<br>
+				Provider type: 
+				<select value="{{auth.provider}}">
+					<option selected >google</option>
+					<!--<option>anonymous</option>
+						<option>facebook</option> -->
+					<option>github</option>
+					<!--<option>twitter</option>
+						<option>password</option> -->
+				</select>
+				<em>Only 'anonymous', 'google', and 'password' are activated for demo Firebase account</em>
+				<br>
 
-			Login params (JSON):
-			<input value="{{params}}" id="params">
-			<em>Required by some provider types</em>
-			<br>
+				Login params (JSON):
+				<input value="{{params}}" id="params">
+				<em>Required by some provider types</em>
+				<br>
+
+				<h3>Login status:</h3>
+				<p>{{auth.statusKnown && user && 'Logged in' || auth.statusKnown && 'Logged out' || 'Unknown (checking status...)'}}</p>
+
+				<h3>User ID:</h3>
+				<pre>{{user.uid}}</pre>
+			</div>
 
 			<br>
 			<div id="message"></div>
 			<br>
 
-			<button on-tap="{{login}}" hidden?="{{!auth.statusKnown || auth.user}}">Login</button>
-			<button on-tap="{{logout}}" hidden?="{{!auth.statusKnown || !auth.user}}">Logout</button>
+			<paper-button on-tap="{{login}}" hidden?="{{!auth.statusKnown || auth.user}}" style="background-color: {{colors.accent}}; color: white;" raised>Login with Google</paper-button>
+			<paper-button on-tap="{{logout}}" hidden?="{{!auth.statusKnown || !auth.user}}" raised>Logout</paper-button>
 
-			<h3>Login status:</h3>
-			<p>{{auth.statusKnown && user && 'Logged in' || auth.statusKnown && 'Logged out' || 'Unknown (checking status...)'}}</p>
-
-			<h3>User ID:</h3>
-			<pre>{{user.uid}}</pre>
 		</paper-shadow>
 	</template>
  	<script>
