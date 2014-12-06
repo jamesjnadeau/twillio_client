@@ -8,20 +8,20 @@
 
 
 <link rel="import" href="/components/app-globals.html">
-<link rel="import" href="/components/app-contact.html">
+<link rel="import" href="/components/app-message.html">
 
-<polymer-element name="app-contacts" attributes="auth" >
+<polymer-element name="app-messages" attributes="auth" >
 	<template>
 		<link rel='stylesheet' href='/css/default.css'/>
 		<app-globals id="globals" firebase_url="{{firebase_url}}" colors="{{colors}}" ></app-globals>
-		<div hidden?="{{contacts.length}}">
+		<div hidden?="{{messages.length}}">
 			<paper-shadow  z="1" class="card">
 				<h3>Add a route with the button below</h3>
 			</paper-shadow>
 		</div>
 		
-		<template repeat="{{ contact in contacts }}">
-			<app-contact uid={{contact}}></app-contact>
+		<template repeat="{{ message in messages }}">
+			<app-message uid={{message}}></app-message>
 		</template>
 		
 		<div layout horizontal >
@@ -42,9 +42,9 @@
 			var login_saved = false;
 			Polymer({
 				ready: function() {
-					this.contacts = [];
+					this.messages = [];
 					this.lastDeleted = false;
-					this.firebase_data_url = this.firebase_url+'/contacts/';
+					this.firebase_data_url = this.firebase_url+'/messages/';
 					console.log(this.firebase_data_url)
 
 					this.resetLocal = function() {
@@ -68,13 +68,13 @@
 					var user_uid = this.auth.user.uid;
 					var usersfirebaseRoot = firebaseRoot.orderByChild("user_uid").equalTo(user_uid);
 					usersfirebaseRoot.on('child_added', function(snapshot) {
-						self.contacts.push(snapshot.key())
+						self.messages.push(snapshot.key())
 					});
 					usersfirebaseRoot.on('child_removed', function(snapshot) {
 						self.lastDeleted = snapshot.val();
-						for(var i = 0; i < self.contacts.length; i++) {
-							if(self.contacts[i] == snapshot.key()) {
-								self.contacts.splice(i, 1);
+						for(var i = 0; i < self.messages.length; i++) {
+							if(self.messages[i] == snapshot.key()) {
+								self.messages.splice(i, 1);
 								self.$.undoDeleteToast.show();
 								break;
 							}

@@ -1,0 +1,102 @@
+<link rel="import" href="/vendor/paper-shadow/paper-shadow.html">
+<link rel="import" href="/vendor/core-menu/core-menu.html">
+<link rel="import" href="/vendor/core-icons/av-icons.html">
+<link rel="import" href="/vendor/paper-item/paper-item.html">
+<link rel="import" href="/vendor/paper-input/paper-input.html">
+<link rel="import" href="/vendor/paper-input/paper-autogrow-textarea.html">
+<link rel="import" href="/vendor/paper-dropdown/paper-dropdown.html">
+<link rel="import" href="/vendor/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="/vendor/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/vendor/paper-fab/paper-fab.html">
+
+<link rel="import" href="/components/app-globals.html">
+
+<polymer-element name="app-message" attributes="uid next_routerid" >
+	<template>
+		<link rel='stylesheet' href='/css/default.css'/>
+		<style>
+			.padded { padding-left: 20%; padding-right: 20%; }
+			.notes {padding: 20px; padding-left: 40px;}
+		</style>
+		<app-globals id="globals" firebase_url="{{firebase_url}}" colors="{{colors}}" ></app-globals>
+		<firebase-element id="base" 
+				on-data-change="{{dataChange}}" 
+				data="{{data}}" 
+				location="{{firebase_data_url}}" 
+				data-change="{{dataChanged}}"
+				>
+			</firebase-element>
+		<paper-shadow  z="1" class="card">
+			<div layout horizontal>
+				<div flex>
+					<paper-fab mini icon="{{play_icon}}" on-tap="{{playToggle}}" style="background-color: {{colors.accent}}"></paper-fab>
+				</div>
+				<div flex layout horizontal class="padded" >
+					<paper-input label="from" floatingLabel="true" value="{{data.from}}" flex ></paper-input>
+				</div>
+				<div>
+					<paper-icon-button icon="delete"  on-tap="{{delete}}" ></paper-icon-button>
+				</div>
+			</div>
+			<div layout horizontal >
+				<paper-input label="Number" floatingLabel="true" value="{{data.number}}" flex ></paper-input>
+				<div flex three layout horizontal class="notes">
+					<paper-autogrow-textarea id="notes_area" rows="3" flex>
+						<textarea id="notes" placeholder="Notes..."  on-keyup="{{notesChanged}}">{{data.notes}}</textarea>
+					<paper-autogrow-textarea>
+				</div>
+			</div>
+		</paper-shadow>
+	</template>
+	<script>
+		(function() {
+			// these variables are shared by all instances of app-globals
+			var actions = [ 'Flow 1', 'Flow 2', 'Flow 3', 'Flow 4'];
+			Polymer({
+				ready: function() {
+					this.actions = actions;
+					this.expand_icon = 'more-horiz';
+					this.init_action = false;
+					this.play_icon = 'av:play-arrow';
+				},
+				domReady: function() {
+					console.log(this.router_uid);
+					this.firebase_data_url = this.firebase_url+'/messages/'+this.uid;
+				},
+				observe: {
+					// dataChanged only called if data is pointed at a new object
+					// changes to data's _properties or sub-properites are not observed_
+					data: 'dataChanged',
+				},
+				dataChanged: function() {
+					if(!this.init_action) { //init action item
+						this.init_action = true;
+						for(var i = 0; i < this.actions.length; i++) {
+							if(this.data.action == this.actions[i]) {
+								this.actionNumber = i;
+								break;
+							}
+						}
+					}
+				},
+				playToggle: function() {
+					if(this.play_icon == 'av:play-arrow') {
+						this.play_icon = 'av:pause';
+					} else {
+						this.play_icon = 'av:play-arrow'
+					}
+				},
+				notesChanged: function() {
+					this.data.notes = this.$.notes.value;
+				},
+				actionChange: function(event) {
+					this.currentAction = event.detail.item.innerText;
+					this.data.action = this.currentAction;
+				},
+				delete: function() {
+					this.data = null;
+				}
+			});
+		})();
+	</script>
+</polymer-element>

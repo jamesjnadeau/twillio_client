@@ -10,7 +10,7 @@
 <link rel="import" href="/components/app-globals.html">
 
 
-<polymer-element name="call-router-actions" attributes="currentAction data" >
+<polymer-element name="call-router-actions" attributes="data actionIndex actionsChanged" >
 	<template>
 		<link rel='stylesheet' href='/css/default.css'/>
 		<style>
@@ -19,6 +19,7 @@
 			.pad-left { margin-left: 30px; }
 			paper-dropdown-menu { margin-top: 24px; }
 		</style>
+		<app-globals id="globals" firebase_url="{{firebase_url}}" colors="{{colors}}" ></app-globals>
 		<div layout horizontal >
 			<div>
 				<paper-dropdown-menu label="Action">
@@ -87,11 +88,12 @@
 				domReady: function() {
 				},
 				observe: {
-					// dataChanged only called if data is pointed at a new object
-					// changes to data's _properties or sub-properites are not observed_
-					data: 'dataChanged',
-					// dataNameChanged called if `data.name` changes
-					//'data.name': 'dataNameChanged'
+					//data: 'actionsChanged',
+					'data.action': 'actionsChanged',
+					'data.forward_number': 'actionsChanged',
+					'data.message': 'actionsChanged',
+					'data.recording': 'actionsChanged',
+					'data.menu': 'actionsChanged',
 				},
 				dataChanged: function() {
 					if(!this.init_action) { //init action item
@@ -105,7 +107,6 @@
 					}
 				},
 				actionChange: function(event) {
-					console.log(event.detail.isSelected, event.detail.item.innerText);
 					this.currentAction = event.detail.item.innerText;
 					this.data.action = this.currentAction;
 				},

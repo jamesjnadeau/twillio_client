@@ -25,12 +25,6 @@
 
 			<h3>Remote Data</h3>
 			<pre>{{json}}</pre>
-
-			<hr>
-
-			<button on-tap="{{removeLocal}}">Remove Local</button>
-			
-			<hr>
 			
 			<h3>Connect to Twillio</h3>
 			<style type="text/css">
@@ -49,7 +43,7 @@
 			Polymer({
 				ready: function() {
 					console.log(this.uid);
-					this.firebase_data_url = this.firebase_url+'/user/'+this.uid;
+					this.firebase_data_url = this.firebase_url+'/user/'+encodeURIComponent(this.uid);
 					this.resetLocal = function() {
 						// direct setting of data is persisted automatically
 						this.data = {
@@ -67,7 +61,9 @@
 				},
 				domReady: function() {
 					console.log('data',this.data);
-
+					if(this.data == null) {
+						this.data = this.auth.user;
+					}
 				},
 				observe: {
 					// dataChanged only called if data is pointed at a new object
@@ -75,13 +71,14 @@
 					data: 'dataChanged',
 					// dataNameChanged called if `data.name` changes
 					//'data.name': 'dataNameChanged'
+					'data.display_name': 'dataChanged'
 				},
 				dataChanged: function() {
 					this.json = JSON.stringify(this.data, null, '\t');
-					console.log('data changed', this.data);
+					console.log('data changed', login_saved, this.data);
 					if(!login_saved) {
 						login_saved = true;
-						if(this.data.expires !== this.auth.user.expires) {
+						if(typeof this.data.expires === 'undefined' || this.data.expires !== this.auth.user.expires) {
 							console.log('Saving user');
 							var display_name;
 							if(this.data.display_name) {

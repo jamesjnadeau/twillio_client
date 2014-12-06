@@ -21,11 +21,9 @@
 		</style>
 		<app-globals id="globals" firebase_url="{{firebase_url}}" colors="{{colors}}" ></app-globals>
 		<firebase-element id="base" 
-				on-data-change="{{dataChange}}" 
 				data="{{data}}" 
 				location="{{firebase_data_url}}" 
-				log 
-				data-change="{{dataChanged}}"
+				log
 				>
 			</firebase-element>
 		<paper-shadow  z="1" class="card" >
@@ -37,10 +35,14 @@
 					<paper-icon-button icon="delete"  on-tap="{{delete}}" ></paper-icon-button>
 					<paper-icon-button icon="{{expand_icon}}"  on-tap="{{expandedToggle}}" ></paper-icon-button>
 				</div>
-			</div> 
-			<call-router-actions currentAction="{{currentAction}}" data="{{data}}" ></call-router-actions>
+			</div>
+			<div hidden?="{{ expand_icon == 'more-horiz' }}" >
+				<template repeat="{{ action, actionIndex in data.actions }}">
+					<call-router-actions data="{{action}}" actionsChanged="{{actionsChanged}}" actionIndex="{{actionIndex}}" ></call-router-actions>
+				</template>
+			</div>
 		</paper-shadow>
-		<div layout horizontal class="sub-route" >
+		<div layout horizontal class="sub-route" hidden?="{{ expand_icon == 'more-horiz' }}" >
 			<span flex three></span>
 			<span flex three></span>
 			<paper-fab mini icon="add" style="background-color: {{colors.secondary}};" on-tap="{{addNew}}"></paper-fab>
@@ -49,11 +51,16 @@
 	</template>
 	<script>
 		(function() {
-			// these variables are shared by all instances of app-globals
-			
 			Polymer({
 				ready: function() {
 					this.expand_icon = 'more-horiz';
+					var self = this;
+					this.actionsChanged = function() {
+						self.job('actionsChanged', function() {
+							self.$.base.commitProperty( 'actions' );
+						}, 3000);
+						
+					};
 				},
 				domReady: function() {
 					console.log(this.router_uid);
@@ -64,7 +71,14 @@
 						this.expand_icon = 'more-horiz';
 					} else {
 						this.expand_icon = 'more-vert'
+						console.log(this.data);
+						if(typeof this.data.actions === 'undefined') {
+							this.data.actions = [{}];
+						}
 					}
+				},
+				addNew: function() {
+					var newStuff = this.data.actions.push({});
 				},
 				delete: function() {
 					this.data = null;
