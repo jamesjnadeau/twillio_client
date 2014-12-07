@@ -41,8 +41,8 @@
 				></firebase-login>
 
 		<twilio-client id="twilio_client"
-			capabilityTokenUrl="/api/capabilities.php"
-			clientName="jenny"></twilio-client>
+			capabilityTokenUrl="{{capability_url}}"
+			clientName="{{clientName}}"></twilio-client>
 
 		<core-drawer-panel force-narrow="true" >
 			<core-header-panel drawer>
@@ -126,6 +126,7 @@
 						self.$.router.go(url, {replace: true});
 					}
 					this.phone_hide = true;
+					this.capability_url = false;
 				},
 				domReady: function() {
 					var self = this;
@@ -138,11 +139,15 @@
 								self.display_name = user.google.displayName;
 							}
 							self.twilioClient.init();
+							self.twilioClient.clientName = user.uid;
 							self.phone_hide = false;
 							self.nav('/user/'+encodeURIComponent(user.uid));
 						}
 					}
 					document.addEventListener('login', loginEvent);
+				},
+				observe: {
+					user: 'userChange'
 				},
 				logChange: function(event) {
 					console.log(this.log);
@@ -159,9 +164,6 @@
 									//router_semaphore = false;
 									self.$.router.go('/login', {replace: true});
 									//router_semaphore = true;
-								} else {
-									self.phone_hide = false;
-									self.$.twilio_client.init();
 								}
 							} else {
 								window.setTimeout(wait_for_status, 200);
@@ -177,7 +179,10 @@
 					var user = this.user;
 					if(typeof user !== 'undefiend') {
 						if(this.capability_url == false) {
+							this.phone_hide = false;
 							this.capability_url = '/api/capabilities.php?+uid='+user.uid;
+							this.clientName = this.auth.user.uid;
+							console.log(this.clientName);
 							this.twilioClient.init();
 						}
 					}

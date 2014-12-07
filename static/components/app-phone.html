@@ -3,6 +3,7 @@
 <link rel="import" href="/vendor/paper-dialog/paper-dialog.html">
 <polymer-element name="app-phone" attributes="twilioClient auth" >
 	<template>
+		<app-globals id="globals" firebase_url="{{firebase_url}}" colors="{{colors}}" ></app-globals>
 		<paper-fab mini hidden?="{{!twilioClient.capabilityTokenUrl}}" icon="communication:call" on-tap="{{phoneTapped}}" style="background-color: {{phone_color}}"></paper-fab>
 
 		<paper-dialog id="phoneCallDialog" transition="core-transition-top" vertical layout>
@@ -22,7 +23,7 @@
 				<paper-input label="Number" value="{{phoneNumber}}" type="tel" ></paper-input>
 			</div>
 			<div layout horizontal>
-				<paper-button flex raised on-tap="{{phoneAnswerDialogAction}}" style="background-color: #CCCC33;" >{{phoneCallDialogActionLabel}}</paper-button>
+				<paper-button flex raised on-tap="{{phoneAnswerDialogAction}}" style="background-color: {{phoneCallDialogActionColor}}" >{{phoneCallDialogActionLabel}}</paper-button>
 			</div>
 			
 		</paper-dialog>
@@ -33,6 +34,7 @@
 			Polymer({
 				ready: function() {
 					this.phoneCallDialogActionLabel = "Call";
+					this.phoneCallDialogActionColor = this.colors.accent;
 					this.status = false;
 					this.incomingCall = false;
 
@@ -80,12 +82,15 @@
 					switch(this.phoneCallDialogActionLabel) {
 						case 'Call':
 							console.log('calling '+this.phoneNumber);
-							this.twilioClient.call(this.phoneNumber);
+							this.twilioClient.number = this.phoneNumber;
+							this.twilioClient.call(this.twilioClient.number);
 							this.phoneCallDialogActionLabel = "Hang Up";
+							this.phoneCallDialogActionColor = this.colors.secondary;
 							break;
 						case 'Hang Up': 
 							this.twilioClient.hangUp();
 							this.phoneCallDialogActionLabel = "Call";
+							this.phoneCallDialogActionColor = this.colors.accent;
 							break;
 					}
 				},
