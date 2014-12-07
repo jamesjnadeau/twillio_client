@@ -38,7 +38,7 @@ class Firebase implements FirebaseInterface
         }
 
         if (!extension_loaded('curl')) {
-            trigger_error('Extension CURL is not loaded.', E_USER_ERROR);
+            //trigger_error('Extension CURL is not loaded.', E_USER_ERROR);
         }
 
         $this->setBaseURI($baseURI);

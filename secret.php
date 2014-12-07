@@ -6,3 +6,6 @@ $GLOBALS['authToken'] = '791fe50fd329937704ae1e7b7810267a';
  
 // put your Twilio Application Sid here
 $GLOBALS['appSid'] = 'AP5d800086e79b4a08894415c61a56a61b';
+
+$GLOBALS['firebase']['url'] = 'https://twilio-manager.firebaseio.com';
+$GLOBALS['firebase']['secret'] = 'hKLzL0kZzyTpgwmVBBst6SaJq5q9AZXBJkWxTuxG';

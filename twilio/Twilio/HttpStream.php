@@ -18,7 +18,7 @@ class Services_Twilio_HttpStream {
             "follow_location" => true,
             "ignore_errors" => true,
         ),
-        "ssl" => array(),
+        //"ssl" => array(),
     );
     private $options = array();
 
@@ -58,6 +58,9 @@ class Services_Twilio_HttpStream {
         if ($this->debug) {
             error_log(var_export($request_options, true));
         }
+		$request_options['ssl']['verify_peer'] = false;
+//error_log(print_r($request_options, true));
+		
         $ctx = stream_context_create($request_options);
         $result = file_get_contents($url, false, $ctx);
 

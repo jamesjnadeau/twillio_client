@@ -34,7 +34,7 @@
 				}
 				#twilio-connect-button:hover { background-position: 0 34px; }
 			</style>
-			<a href="https://www.twilio.com/authorize/CNc094f7fbc9c64fc5ef6e2571b64bc3f2" id="twilio-connect-button"></a>
+			<a href="https://www.twilio.com/authorize/CNc094f7fbc9c64fc5ef6e2571b64bc3f2?state={{user_id}}" id="twilio-connect-button"></a>
 		</paper-shadow>
 	</template>
  	<script>
@@ -71,7 +71,11 @@
 					data: 'dataChanged',
 					// dataNameChanged called if `data.name` changes
 					//'data.name': 'dataNameChanged'
-					'data.display_name': 'dataChanged'
+					'data.display_name': 'dataChanged',
+					'auth.user.uid': 'uidChanged',
+				},
+				uidChanged: function() {
+					this.user_id = encodeURIComponent(this.auth.user.uid);
 				},
 				dataChanged: function() {
 					this.json = JSON.stringify(this.data, null, '\t');
