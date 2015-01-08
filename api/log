@@ -1,0 +1,28 @@
+Array
+(
+    [AccountSid] => AC8ab92c1b24144865af6472525fe87203
+    [ToZip] => 05450
+    [FromState] => VT
+    [Called] => +18023471430
+    [FromCountry] => US
+    [CallerCountry] => US
+    [CalledZip] => 05450
+    [Direction] => inbound
+    [FromCity] => BURLINGTON
+    [CalledCountry] => US
+    [CallerState] => VT
+    [CallSid] => CA769fc3e19af379cbe7a66fe503fe1714
+    [CalledState] => VT
+    [From] => +18027771834
+    [CallerZip] => 05468
+    [FromZip] => 05468
+    [CallStatus] => ringing
+    [ToCity] => ENOSBURG FALLS
+    [ToState] => VT
+    [To] => +18023471430
+    [ToCountry] => US
+    [CallerCity] => BURLINGTON
+    [ApiVersion] => 2010-04-01
+    [Caller] => +18027771834
+    [CalledCity] => ENOSBURG FALLS
+)

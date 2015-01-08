@@ -12,6 +12,6 @@ require $_SERVER['DOCUMENT_ROOT'].'/firebase/firebaseLib.php';
 
 $firebase = new Firebase($GLOBALS['firebase']['url'], $GLOBALS['firebase']['secret']);
 
-$firebase->update('/twilioConnect/'.urlencode($_REQUEST['AccountSid']).'/user_id', $_REQUEST['state']);
+$firebase->set('/twilioConnect/'.urlencode($_REQUEST['AccountSid']).'/user_id', $_REQUEST['state']);
 
 header('Location: /');

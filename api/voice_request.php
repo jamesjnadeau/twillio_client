@@ -20,7 +20,7 @@ if (preg_match("/^[\d\+\-\(\) ]+$/", $number)) {
 } else {
     $numberOrClient = "<Client>" . $number . "</Client>";
 }
-//file_put_contents('log', print_r($_REQUEST, true));
+file_put_contents('log', print_r($_REQUEST, true));
 ?>
  
 <Response>
