@@ -1,0 +1,37 @@
+{
+  "name": "template-router",
+  "authors": [
+    "James Nadeau <james.nadeau@gmail.com>"
+  ],
+  "description": "Element providing a simple, opinionated routing system for polymer based apps.",
+  "keywords": [
+    "web-component",
+    "web-components",
+    "polymer",
+    "template",
+    "route"
+  ],
+  "main": "template-router.html",
+  "license": "MIT",
+  "homepage": "https://github.com/jamesjnadeau/template-router",
+  "ignore": [
+    "/.*",
+    "/tests/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^0.5.2",
+    "history.js": "~1.8.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "Polymer/web-component-tester#^2.0.5"
+  },
+  "_release": "501d2eea0c",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "501d2eea0ccaf4ee94bceb90fe2fd70ad12e14e8"
+  },
+  "_source": "git@github.com:jamesjnadeau/template-router.git",
+  "_target": "master",
+  "_originalSource": "git@github.com:jamesjnadeau/template-router.git"
+}

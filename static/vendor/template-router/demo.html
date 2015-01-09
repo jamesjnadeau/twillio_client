@@ -1,0 +1,72 @@
+<!--
+    @license
+    Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+    The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+    The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+    Code distributed by Google as part of the polymer project is also
+    subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<!doctype html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>seed-element Demo</title>
+
+  <script src="/vendor/webcomponentsjs/webcomponents.js"></script>
+  <link rel="import" href="/vendor/polymer/polymer.html">
+  <link rel="import" href="template-router.html">
+
+</head>
+<body unresolved>
+
+  <p>An example of using <code>&lt;seed-element&gt;</code>:</p>
+	<polymer-element name="app-main" attributes="">
+		<template>
+			<template-router id="router" init="auto" mode="pushstate">
+			<template-route path="/auth" template>
+				<template >
+					<h3>Login Page</h3>
+					<a href="/" >Home</a>
+					<a href="/user/test" >test user</a>
+				</template>
+			</template-route>
+
+			<template-route path="/user/:uid" template>
+				<template >
+					<h3>User Page</h3>
+					<h3>{{uid}}</h3>
+					<a href="/" >Home</a>
+					<a href="/auth" >Login</a>
+				</template>
+			</template-route>
+
+			<!-- matches everything else -->
+			<template-route path="*" template >
+				<template>
+					<h3>Home Page {{pages_viewed}}</h3>
+					<a href="/user/test" >test user</a>
+					<a href="/auth" >Login</a>
+				</template>
+			</template-route>
+		</template-router>
+		</template>
+		<script>
+			(function() {
+				Polymer({
+					ready: function() {
+						this.pages_viewed = 0;
+					},
+					domReady: function() {
+						
+					},
+					observe: {
+						
+					},
+				});
+			})();
+		</script>
+	</polymer-element>
+	<app-main></app-main>
+</body>
+</html>

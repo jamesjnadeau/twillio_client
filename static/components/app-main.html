@@ -13,7 +13,7 @@
 <link rel="import" href="/vendor/core-icons/communication-icons.html">
 <link rel="import" href="/vendor/twilio-client/twilio-client.html">
 
-<link rel="import" href="/vendor/app-router/app-router.html">
+<link rel="import" href="/vendor/template-router/template-router.html">
 
 
 <link rel="import" href="/components/app-globals.html" >
@@ -25,6 +25,7 @@
 <link rel="import" href="/pages/app-contacts.html" >
 <link rel="import" href="/pages/app-messages.html" >
 <link rel="import" href="/pages/app-call-routing.html" >
+
 
 <polymer-element name="app-main" attributes="">
 	<template>
@@ -62,47 +63,51 @@
 				</core-toolbar>
 
 				<div class="container" layout vertical>
-					<app-router id="router" init="manual" on-state-change="{{stateChange}}" mode="pushstate">
-						<app-route path="/login" template>
+					<template-router id="router" init="manual" on-state-change="{{stateChange}}" mode="pushstate">
+						<template-route path="/login" >
 							<template >
 								<app-login auth="{{auth}}" ></app-login>
 							</template>
-						</app-route>
+						</template-route>
 
-						<app-route path="/user/:uid" template>
+						<template-route path="/user/:uid" >
 							<template >
 								<app-user auth="{{auth}}" uid="{{uid}}"></app-user>
 							</template>
-						</app-route>
+						</template-route>
 
-						<app-route path="/messages" template>
+						<template-route path="/messages" >
 							<template >
 								<app-messages auth="{{auth}}" ></app-messages>
 							</template>
-						</app-route>
+						</template-route>
 
-						<app-route path="/contacts" template>
+						<template-route path="/contacts" >
 							<template >
 								<app-contacts auth="{{auth}}" ></app-contacts>
 							</template>
-						</app-route>
+						</template-route>
 
-						<app-route path="/numbers" template>
+						<template-route path="/numbers" >
 							<template >
 								<app-contacts auth="{{auth}}" ></app-contacts>
 							</template>
-						</app-route>
+						</template-route>
 
-						<app-route path="/routing" template>
+						<template-route path="/routing" >
 							<template >
 								<app-call-routing auth="{{auth}}" ></app-call-routing>
 							</template>
-						</app-route>
+						</template-route>
 
 
 						<!-- matches everything else -->
-						<app-route path="*" import="/pages/firebase-test.html" element="firebase-test" on-activate-route-start="{{homePage}}" ></app-route>
-					</app-router>
+						<template-route path="*" >
+							<template>
+								<firebase-test></firebase-test>
+							</template>
+						</template-route>
+					</template-router>
 				</div>
 			</core-header-panel>
 		</core-drawer-panel>
@@ -171,9 +176,6 @@
 						}
 						wait_for_status();
 					}
-				},
-				homePage: function(event) {
-					// this is only called when you navigate to the home page
 				},
 				userChange: function(event) {
 					var user = this.user;
